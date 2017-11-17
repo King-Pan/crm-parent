@@ -1,0 +1,101 @@
+body {
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	background-size: cover;
+	height: 100%;
+	background-image: url('imgs/login/login_bg.png');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: bottom left;
+	overflow: hidden;
+}
+
+.top {
+	height: 72px;
+	width: 100%;
+	background-color: #fff;
+}
+
+.login-form-group {
+	margin-bottom: 0;
+}
+
+.login-input {
+	border: 0;
+	outline: none;
+}
+
+.login-addon {
+	background: #fff;
+	border: 0;
+	border-radius: 0;
+}
+
+a {
+	color: #fff;
+}
+
+.login-btn {
+	background: -webkit-linear-gradient(left, #7da5fe, #406fdc);
+	background: -o-linear-gradient(right, #7da5fe, #406fdc);
+	background: -moz-linear-gradient(right, #7da5fe, #406fdc);
+	background: linear-gradient(to right, #7da5fe, #406fdc);
+}
+
+.inputfont::-webkit-input-placeholder {
+	font-size: 14px;
+	color: #ccc;
+}
+
+.inputfont::-moz-placeholder {
+	font-size: 14px;
+	color: #ccc;
+}
+
+.inputfont:-ms-input-placeholder {
+	font-size: 14px;
+	color: #ccc;
+}
+
+.pre_chart {
+	padding-right: 60px;
+	height: 500px;
+}
+
+.pre_login {
+	margin-right: 0;
+	margin-top: 100px;
+	width: 290px;
+}
+
+@media screen and (max-width:1200px) {
+	.pre_chart {
+		position: absolute;
+		left: 0;
+	}
+	.pre_login {
+		position: absolute;
+		right: 0;
+	}
+}
+
+textarea {
+	resize: none;
+	width: 236px;
+	height: 180px;
+}
+
+.dialog-header {
+	background-image: url('imgs/login/banner-3.jpg');
+	color: #fff;
+}
+
+.dialog-button {
+	padding: 10px 30px;
+	border-radius: 20px;
+	background-color: #3cd180;
+}
+
+#regAlert {
+	display: none;
+}

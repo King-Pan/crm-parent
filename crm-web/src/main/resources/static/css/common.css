@@ -1,0 +1,234 @@
+/*公共样式*/
+/*
+CSS Reset
+理念：清除和重置是紧密不可分的
+特色：1.适应中文 2.基于最新主流浏览器
+*/
+
+/* 清除内外边距 */
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote /* structural elements 结构元素 */
+dl, dt, dd, ul, ol, li, /* list elements 列表元素 */
+pre, /* text formatting elements 文本格式元素 */
+fieldset, lengend, button, input, textarea, /* form elements 表单元素 */
+th, td { /* table elements 表格元素 */
+    margin: 0;
+    padding: 0;
+}
+
+/* 设置默认字体 */
+body,
+button, input, select, textarea { /* for ie */
+    /*font: 12px/1 Tahoma, Helvetica, Arial, "宋体", sans-serif;*/
+    font: 12px/1 'Microsoft YaHei',Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif; /* 用 ascii 字符表示，使得在任何编码下都无问题 */
+}
+
+h1 { font-size: 18px; /* 18px / 12px = 1.5 */ }
+h2 { font-size: 16px; }
+h3 { font-size: 14px; }
+h4, h5, h6 { font-size: 100%; }
+
+address, cite, dfn, em, var { font-style: normal; } /* 将斜体扶正 */
+code, kbd, pre, samp, tt { font-family: "Courier New", Courier, monospace; } /* 统一等宽字体 */
+small { font-size: 12px; } /* 小于 12px 的中文很难阅读，让 small 正常化 */
+
+/* 重置列表元素 */
+ul, ol { list-style: none; }
+
+/* 重置文本格式元素 */
+a { text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus { outline:none;}
+
+abbr[title], acronym[title] { /* 注：1.ie6 不支持 abbr; 2.这里用了属性选择符，ie6 下无效果 */
+    border-bottom: 1px dotted;
+    cursor: help;
+}
+
+q:before, q:after { content: ''; }
+
+/* 重置表单元素 */
+legend { color: #000; } /* for ie6 */
+fieldset, img { border: none; } /* img 搭车：让链接里的 img 无边框 */
+/* 注：optgroup 无法扶正 */
+button, input, select, textarea {
+    font-size: 100%; /* 使得表单元素在 ie 下能继承字体大小 */
+}
+/* 重置表格元素 */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* 重置 hr */
+hr {
+    border: none;
+    height: 1px;
+}
+
+/* 让非ie浏览器默认也显示垂直滚动条，防止因滚动条引起的闪烁 */
+html { overflow-y: scroll; }
+body{
+    background: #edf0f0;
+}
+
+.thead-bg {
+    background-color: #E8F0F0;
+}
+
+.h-title {
+    height: 20px;
+    font-weight: bold;
+    font-size: 14px;
+    width: 100%;
+    display: block;
+    line-height: 20px;
+    border-left: 3px solid #eeeeee;
+    padding-left: 5px;
+    margin-bottom: 10px;
+}
+
+.layui-laydate .layui-this, .laydate-selected:hover {
+    background-color: #337ab7 !important;
+}
+
+.layui-laydate-content td.laydate-selected {
+    background-color: #e8f0f0 !important;
+}
+
+.layui-laydate-footer span:hover {
+    color: #337ab7 !important;
+}
+
+.layui-laydate-header i:hover, .layui-laydate-header span:hover {
+    color: #337ab7 !important;
+}
+
+.layui-layer-btn .layui-layer-btn0 {
+    border-color: #337ab7;
+    background-color: #337ab7;
+    color: #fff;
+}
+
+.input-width {
+    width: 120px !important;
+}
+
+.select-width {
+    width: 120px !important;
+}
+
+.red,.red:hover,.red:active,.red:link{
+    color: red
+}
+.form-inline .form-control{
+    width: 172px;
+    height: 25px !important;
+    font-size: 12px !important;
+}
+.layui-form-label, .layui-form-mid, .layui-textarea{
+    line-height: 10px !important;
+}
+.select2-container--default .select2-selection--single{
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+}
+.container-main {
+    background: #FFFFFF;
+    padding: 15px;
+    border-radius: 2px;
+}
+
+.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th{
+    font-size: 12px !important;
+}
+
+.layui-btn{
+    background-color: #337ab7 !important;
+}
+.line-margin {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.label-margin {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.btn{
+    font-size: 12px;
+}
+#condition_pane,#condition_pane1{
+    background: #e8f0f0;
+    padding-left: 10px;
+    border-bottom: 1px solid #DBDBDB;
+}
+.form-control{
+    padding: 3px 6px !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-transition:none;
+    -o-transition: none;
+    transition: none;
+}
+.select2-container .select2-selection--single{
+    height: 25px !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height: 25px !important;
+}
+.select2-search--dropdown .select2-search__field{
+    padding: 2px;
+}
+.layui-form-label {
+    padding: 7px 5px !important;
+    width: 60px;
+}
+.btn{padding: 3px 10px;}
+.table-hover>tbody>tr:hover{
+    color: #6b9b0f;
+    background: #edf0f0;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+    padding: 5px;
+}
+.condition {
+    /*padding: 5px 0;*/
+}
+.layui-laydate-content th{
+    font-size: 14px;
+}
+.layui-laydate-content td{
+    font-size: 12px;
+}
+.layui-laydate-list>li, .layui-laydate-range .layui-laydate-main{
+    font-size: 12px;
+}
+.table>tbody>tr>td{
+    text-align:center;
+}
+
+/* dataTables表头居中 */
+.table>thead:first-child>tr:first-child>th{
+    text-align:center;
+}
+.form_datetime{
+    width: 172px;
+    height:25px;
+}
+
+.amount_div{
+    width: 86px;
+}
+.amount_input{
+    height: 25px;
+}
+
+.btn_div{
+    width: 100%;
+    margin-right: 15px;
+    text-align: right;
+}
+.pagination>li>a, .pagination>li>span{
+    padding:3px 10px;
+}
