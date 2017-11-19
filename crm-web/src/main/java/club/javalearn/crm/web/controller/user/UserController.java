@@ -1,4 +1,4 @@
-package club.javalearn.crm.web.controller;
+package club.javalearn.crm.web.controller.user;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,14 +8,15 @@ import org.springframework.web.servlet.ModelAndView;
  * crm-parent
  *
  * @author king-pan
- * @create 2017-11-18
+ * @create 2017-11-19
  **/
 @RestController
-public class HomeController {
+@RequestMapping("/user")
+public class UserController {
 
-    @RequestMapping(value = {"/","/index","/home"})
-    public ModelAndView home(){
-        return new ModelAndView("index");
+    @RequestMapping(value = {"","/"})
+    public ModelAndView page(){
+        return new ModelAndView("user/user");
     }
 
 
