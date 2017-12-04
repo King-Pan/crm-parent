@@ -18,5 +18,10 @@ public class HomeController {
         return new ModelAndView("index");
     }
 
+    @RequestMapping(value = {"/welcome"})
+    public ModelAndView welcome(){
+        return new ModelAndView("welcome");
+    }
+
 
 }
