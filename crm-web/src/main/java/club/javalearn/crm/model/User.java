@@ -1,5 +1,6 @@
 package club.javalearn.crm.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -24,35 +25,46 @@ public class User {
      */
     @Id
     @GeneratedValue
+    @JsonView(UserSimpleView.class)
     private Long userId;
     /**
      * 用户名称
      */
-
+    @JsonView(UserSimpleView.class)
     private String userName;
     /**
      * 用户昵称
      */
+    @JsonView(UserSimpleView.class)
     private String nickName;
     /**
      * 用户密码
      */
+    @JsonView(UserDetailView.class)
     private String password;
     /**
      * 加密盐
      */
+    @JsonView(UserDetailView.class)
     private String salt;
     /**
      * 用户状态
      */
+    @JsonView(UserSimpleView.class)
     private String status;
     /**
      * 创建时间
      */
+    @JsonView(UserSimpleView.class)
     private Date createDate;
     /**
      * 最后更新时间
      */
+    @JsonView(UserSimpleView.class)
     private Date updateDate;
+
+    public interface UserSimpleView{}
+
+    public interface UserDetailView extends UserSimpleView{}
 
 }
