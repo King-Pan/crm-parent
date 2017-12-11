@@ -160,6 +160,15 @@ var utils={
      */
     compare:function (n1,n2) {
         return n1 < n2;
+    },
+    /**
+     * 获取系统的根目录
+     */
+    getBasePath:function () {
+        var obj=window.location;
+        var contextPath=obj.pathname.split("/")[1];
+        var basePath=obj.protocol+"//"+obj.host+"/"+contextPath;
+        return basePath;
     }
 };
 

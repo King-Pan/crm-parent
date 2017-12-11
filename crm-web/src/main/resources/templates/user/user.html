@@ -6,119 +6,78 @@
     <link href="../../static/api/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/api/bootstrap/bootstrap.min.css}" />
     <link rel="stylesheet" href="../../static/api/datatables/jquery.dataTables.css" th:href="@{/api/datatables/jquery.dataTables.css}">
     <link rel="stylesheet" href="../../static/api/datatables/dataTables.bootstrap.css" th:href="@{/api/datatables/dataTables.bootstrap.css}" />
+    <link rel="stylesheet" href="../../static/h-ui/css/H-ui.min.css" th:href="@{/h-ui/css/H-ui.min.css}" />
     <link rel="stylesheet" href="../../static/css/common.css" th:href="@{/css/common.css}" />
-    <link rel="stylesheet" href="../../static/api/layui/css/layui.css" th:href="@{/api/layui/css/layui.css}">
+    <link rel="stylesheet" href="../../static/api/bootstrap/plugins/select2/css/select2.min.css" th:href="@{/api/bootstrap/plugins/select2/css/select2.min.css}">
     <script src="../../static/api/jquery/jquery-2.1.1.min.js" th:src="@{/api/jquery/jquery-2.1.1.min.js}"></script>
-    <script type="text/javascript" src="../../static/api/datatables/dataTables.bootstrap.js" th:src="@{/api/datatables/dataTables.bootstrap.js}"></script>
     <script src="../../static/api/datatables/jquery.dataTables.js" th:src="@{/api/datatables/jquery.dataTables.js}"></script>
     <script src="../../static/api/datatables/dataTables.bootstrap.js" th:src="@{/api/datatables/dataTables.bootstrap.js}"></script>
+    <script src="../../static/h-ui/js/H-ui.min.js" th:src="@{/h-ui/js/H-ui.min.js}"></script>
+    <script src="../../static/api/bootstrap/plugins/select2/js/select2.full.min.js" th:src="@{/api/bootstrap/plugins/select2/js/select2.full.min.js}"></script>
+    <script src="../../static/api/commons.js" th:src="@{/api/commons.js}"></script>
+    <script src="../../static/js/user/user.js" th:src="@{/js/user/user.js}"></script>
 </head>
 <body>
-<div class="containerx" id="condition_pane">
-    <div class="condition">
-        <div class="form-inline line-margin">
-            <div class="form-group">
-                <div class="layui-inline">
-                    <p class="form-control-static cond-label label-margin">收款银行</p>
-                    <div class="layui-input-inline">
-                        <select id="bank_type_name" class="form_datetime form-control  input-width">
-                        </select>
-                    </div>
-                </div>
+<div class="search-header">
+    <div class="row">
+        <div class="col-md-3 col-sm-6">
+            <div class="col-sm-4">
+                <p class="form-control-static">用户账户</p>
             </div>
-            <div class="form-group">
-                <div class="layui-inline">
-                    <p class="form-control-static cond-label label-margin">收款账号</p>
-                    <div class="layui-input-inline">
-                        <select id="bank_accout" class="form_datetime form-control  input-width">
-                            <option value="-1">-请选择收款账号-</option>
-                        </select>
-                    </div>
-                </div>
+            <div class="col-sm-8">
+                <input name="userName" id="userName" class="input-text radius" />
             </div>
-            <div class="form-group">
-                <div class="layui-inline">
-                    <p class="form-control-static cond-label label-margin">收款类型</p>
-                    <div class="layui-input-inline">
-                        <select id="gathering_type" class="form_datetime form-control  input-width">
-                        </select>
-                    </div>
-                </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="col-sm-4">
+                <p class="form-control-static">用户昵称</p>
             </div>
-            <div class="form-group">
-                <div class="layui-inline">
-                    <p class="form-control-static cond-label label-margin">入账时间</p>
-                    <div class="layui-input-inline date">
-                        <input type="text" name="tran_datetimepicker" class="form_datetime form-control  input-width"
-                               id="tran_datetimepicker" placeholder="开始时间-结束时间" />
-                    </div>
-                </div>
+            <div class="col-sm-8">
+                <input name="nickName" id="nickName" class="input-text radius" />
             </div>
-            <div class="form-group">
-                <div class="layui-inline">
-                    <p class="form-control-static cond-label label-margin">稽核状态</p>
-                    <div class="layui-input-inline">
-                        <select id="audit_type" name="audit_type" class="form_datetime form-control input-width">
-                            <option value="-1">全部</option>
-                        </select>
-                    </div>
-                </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="col-sm-4">
+                <p class="form-control-static">用户状态</p>
             </div>
-            <div class="form-group">
-                <div class="layui-inline">
-                    <p class="form-control-static cond-label label-margin">金额</p>
-                    <div class="layui-input-inline" style="width: 100px;">
-                        <input type="text" name="price_min" id="price_min"  placeholder="￥" autocomplete="off" class="layui-input" style="height: 25px;"/>
-                    </div>
-                    <div class="layui-input-inline" style="width: 100px;">
-                        <input type="text" name="price_max" id="price_max" placeholder="￥" autocomplete="off" class="layui-input" style="height: 25px;"/>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="layui-inline" style="top: -2px;">
-                    <input type="hidden" value="" id="exactMoney">
-                    <input type="hidden" value="" id="bunchBank">
-                    <div class="form-group" style="width: 100%;margin: 5px auto;text-align: right;">
-                        <button class="btn btn-default" style="margin-right: 10px;" id="onLineBankQueryBtn">
-                            <span class="glyphicon glyphicon-search"></span> 查询
-                        </button>
-                    </div>
-                </div>
+            <div class="col-sm-8">
+                <select id="status" name="status" class="form-control form-input">
+                    <option value="-1">全部</option>
+                    <option value="0">未启用</option>
+                    <option value="1">启用</option>
+                    <option value="2">锁定</option>
+                    <option value="3">删除</option>
+                </select>
             </div>
         </div>
     </div>
 </div>
 <div id="table_region line-margin" style="margin-left: 15px;">
-    <div v-if="otherInfos.showTable">
-        <div class="condition line-margin">
-            <button class="btn btn-default" data-toggle="modal" data-target="#importModal" id="import"><span class="glyphicon glyphicon-import"></span>导入</button>
-            <button class="btn btn-default" type="button" id="export"><span class="glyphicon glyphicon-export"></span>导出</button>
-            <button class="btn btn-default" type="button" data-toggle="modal"  id="changeBusinessHall" ><span class="glyphicon glyphicon-pencil"></span>营业厅更改</button>
-        </div>
+    <div class="condition line-margin">
+        <button class="btn btn-primary radius" type="button"><span class="glyphicon glyphicon-import"></span>导入</button>
+        <button class="btn btn-primary radius" type="button"><span class="glyphicon glyphicon-export"></span>导出</button>
+        <button class="btn btn-primary radius" type="button" onclick="userObj.doSearch();"><span class="glyphicon glyphicon-search"></span>查询</button>
     </div>
     <div class="container-main">
-        <h3 class="h-title">自营厅网银查询</h3>
+        <h3 class="h-title">用户管理</h3>
         <table id="userTable"
-               class="table table-striped table-hover table-bordered  yx-label-manage-tb">
-            <thead class="thead-bg">
+               class="table table-border table-bordered table-striped table-hover radius">
+            <thead class="thead-bg text-c">
             <tr>
-                <th>选择</th>
-                <th>收款行</th>
-                <th>收款账号</th>
-                <th>收款所属营业厅</th>
-                <th>收款类型</th>
-                <th>入账时间</th>
-                <th>金额</th>
-                <th>付款人户名</th>
-                <th>付款人帐号</th>
-                <th>支票号</th>
-                <th>稽核状态</th>
-                <th>网银类型</th>
+                <th>
+                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <span>全选</span>
+                        <input type="checkbox" id="userManagerTableCheck" class="group-checkable"/>
+                    </label>
+                </th>
+                <th>用户昵称</th>
+                <th>用户账户</th>
+                <th>用户状态</th>
+                <th>创建时间</th>
+                <th>更新时间</th>
             </tr>
             </thead>
             <tbody>
-
             </tbody>
         </table>
     </div>

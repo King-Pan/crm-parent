@@ -1,7 +1,9 @@
 package club.javalearn.crm.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +20,8 @@ import java.util.Date;
 @Entity
 @Table(name = "sys_user")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     /**
@@ -62,6 +66,15 @@ public class User {
      */
     @JsonView(UserSimpleView.class)
     private Date updateDate;
+
+    public User(Long userId,String userName,String nickName,String status,Date createDate,Date updateDate){
+        this.userId = userId;
+        this.userName = userName;
+        this.nickName = nickName;
+        this.status = status;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
+    }
 
     public interface UserSimpleView{}
 
