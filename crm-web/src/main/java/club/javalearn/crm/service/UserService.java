@@ -2,6 +2,7 @@ package club.javalearn.crm.service;
 
 import club.javalearn.crm.model.User;
 import club.javalearn.crm.utils.DataTableMessage;
+import club.javalearn.crm.utils.Message;
 import org.springframework.data.domain.Pageable;
 
 
@@ -14,9 +15,9 @@ import org.springframework.data.domain.Pageable;
 public interface UserService {
     /**
      * 分页查询用户信息
-     * @param user 查询条件
+     * @param param 查询条件
      * @param pageable 分页参数
-     * @return
+     * @return DataTableMessage
      */
-    public DataTableMessage<User> getList(User user, Pageable pageable);
+     Message<User> getList(String param, Pageable pageable);
 }

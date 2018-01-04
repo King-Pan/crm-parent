@@ -1,86 +1,149 @@
-<!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>用户管理</title>
-    <link href="../../static/api/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/api/bootstrap/bootstrap.min.css}" />
-    <link rel="stylesheet" href="../../static/api/datatables/jquery.dataTables.css" th:href="@{/api/datatables/jquery.dataTables.css}">
-    <link rel="stylesheet" href="../../static/api/datatables/dataTables.bootstrap.css" th:href="@{/api/datatables/dataTables.bootstrap.css}" />
-    <link rel="stylesheet" href="../../static/h-ui/css/H-ui.min.css" th:href="@{/h-ui/css/H-ui.min.css}" />
-    <link rel="stylesheet" href="../../static/css/common.css" th:href="@{/css/common.css}" />
+    <link rel="stylesheet" href="../../static/api/bootstrap-table/bootstrap-table.css" th:href="@{/api/bootstrap-table/bootstrap-table.css}" />
+    <link rel="stylesheet" href="../../static/api/bootstrap/bootstrap.min.css" th:href="@{/api/bootstrap/bootstrap.min.css}" />
+    <link rel="stylesheet" href="../../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}">
     <link rel="stylesheet" href="../../static/api/bootstrap/plugins/select2/css/select2.min.css" th:href="@{/api/bootstrap/plugins/select2/css/select2.min.css}">
-    <script src="../../static/api/jquery/jquery-2.1.1.min.js" th:src="@{/api/jquery/jquery-2.1.1.min.js}"></script>
-    <script src="../../static/api/datatables/jquery.dataTables.js" th:src="@{/api/datatables/jquery.dataTables.js}"></script>
-    <script src="../../static/api/datatables/dataTables.bootstrap.js" th:src="@{/api/datatables/dataTables.bootstrap.js}"></script>
-    <script src="../../static/h-ui/js/H-ui.min.js" th:src="@{/h-ui/js/H-ui.min.js}"></script>
-    <script src="../../static/api/bootstrap/plugins/select2/js/select2.full.min.js" th:src="@{/api/bootstrap/plugins/select2/js/select2.full.min.js}"></script>
-    <script src="../../static/api/commons.js" th:src="@{/api/commons.js}"></script>
-    <script src="../../static/js/user/user.js" th:src="@{/js/user/user.js}"></script>
+    <style>
+        .search-header{
+            margin-top: 5px;
+        }
+        .form-label-item{
+            min-width:100px;
+            margin-left: 10px;
+        }
+        .form-control-select{
+            width: 172px;
+        }
+        div.form-group{
+            margin-top: 10px;
+        }
+        .qry-btn {
+            padding: 5px 8px;
+            border: 1px solid #46b8da;
+            border-radius: 3px;
+            color: #46b8da;
+        }
+        a {
+            text-decoration: none;
+            cursor: pointer;
+        }
+        a:hover{
+            text-decoration: none;
+        }
+        .qry-btn:hover{
+            color: #fff;
+            background-color: #5bc0de;
+        }
+    </style>
+
+
+
 </head>
 <body>
-<div class="search-header">
-    <div class="row">
-        <div class="col-md-3 col-sm-6">
-            <div class="col-sm-4">
-                <p class="form-control-static">用户账户</p>
-            </div>
-            <div class="col-sm-8">
-                <input name="userName" id="userName" class="input-text radius" />
-            </div>
+
+<div class="panel-body" style="padding-bottom:0px;">
+    <div class="panel " style="margin-bottom:0px; border: solid 1px #eee;" >
+        <div class="panel-heading" style="font-weight: bold; background-color: #f5fafe; border-bottom: solid 1px #eee;">查询条件
+            <span style="float:right;">
+	            	<a class="qry-btn" onclick="userObj.doSearch()">
+						<span class="glyphicon glyphicon-search"></span>查询
+	            	</a>
+				</span>
         </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="col-sm-4">
-                <p class="form-control-static">用户昵称</p>
-            </div>
-            <div class="col-sm-8">
-                <input name="nickName" id="nickName" class="input-text radius" />
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="col-sm-4">
-                <p class="form-control-static">用户状态</p>
-            </div>
-            <div class="col-sm-8">
-                <select id="status" name="status" class="form-control form-input">
-                    <option value="-1">全部</option>
-                    <option value="0">未启用</option>
-                    <option value="1">启用</option>
-                    <option value="2">锁定</option>
-                    <option value="3">删除</option>
-                </select>
-            </div>
+        <div class="search-header">
+            <form id="formSearch" class="form-inline" role="form">
+                <div class="form-group">
+                    <label class="form-label form-label-item" for="userName">用户账户:</label>
+                    <input type="text" name="userName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label form-label-item" for="nickName">用户昵称:</label>
+                    <input type="text" name="nickName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label form-label-item" for="status">用户状态:</label>
+                    <select id="status" name="status" class="form-control form-control-select">
+                        <option value="-1">全部</option>
+                        <option value="0">未启用</option>
+                        <option value="1">启用</option>
+                        <option value="2">锁定</option>
+                        <option value="3">删除</option>
+                    </select>
+                </div>
+            </form>
         </div>
     </div>
+    <div class="content">
+        <div class="table-responsive">
+            <div id="toolbar">
+                <a href="javascript:void(0);" class="btn btn-primary" onclick="userObj.openAddDialog();"><i class="icon-plus icon-large"></i>新增</a>
+                <a href="javascript:void(0);" class="btn btn-warning" onclick="userObj.edit();"><i class="icon-pencil icon-large"></i>修改</a>
+                <a href="javascript:void(0);" class="btn btn-danger"  onclick="userObj.delete();"><i class="icon-trash icon-large"></i>删除</a>
+            </div>
+            <table id="userTable" class="table-striped table-hover" data-mobile-responsive="true">
+            </table>
+        </div>
+    </div>
+
 </div>
-<div id="table_region line-margin" style="margin-left: 15px;">
-    <div class="condition line-margin">
-        <button class="btn btn-primary radius" type="button"><span class="glyphicon glyphicon-import"></span>导入</button>
-        <button class="btn btn-primary radius" type="button"><span class="glyphicon glyphicon-export"></span>导出</button>
-        <button class="btn btn-primary radius" type="button" onclick="userObj.doSearch();"><span class="glyphicon glyphicon-search"></span>查询</button>
+
+
+<!--addUser begin-->
+<div class="modal fade" id="addUserDialog" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="userModalLabel">新增用户</h4>
+            </div>
+            <div style="padding-right:1px;">
+                <div style="height:355px;">
+                    <form class="form-horizontal add-form-rule" id="addUserForm">
+                        <div class="modal-body" style="width: 100%; height:355px;">
+                            <input placeholder="" name="userId" id="userId"
+                                   value="" class="form-control" type="hidden">
+                            <div class="form-group">
+			          				<span class="col-sm-3 control-label">
+										用户名
+			          				</span>
+                                <div class="col-sm-6">
+                                    <input placeholder="" name="userName" id="userName" class="form-control" type="text">
+                                </div>
+                                <span class="col-sm-3" id="userNameInfo"></span>
+                            </div>
+                            <div class="form-group">
+			          				<span class="col-sm-3 control-label">
+										昵称
+			          				</span>
+                                <div class="col-sm-6">
+                                    <input placeholder="" name="nickName" id="nickName"
+                                           value="" class="form-control" type="text">
+                                </div>
+                                <span class="col-sm-3" id="nickNameInfo"></span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="submit-btn" class="btn btn-info btn-sm submit-btn" onclick="userObj.saveOrUpdate()">提交</button>
+                <button type="button" class="btn btn-info btn-sm" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
     </div>
-    <div class="container-main">
-        <h3 class="h-title">用户管理</h3>
-        <table id="userTable"
-               class="table table-border table-bordered table-striped table-hover radius">
-            <thead class="thead-bg text-c">
-            <tr>
-                <th>
-                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                        <span>全选</span>
-                        <input type="checkbox" id="userManagerTableCheck" class="group-checkable"/>
-                    </label>
-                </th>
-                <th>用户昵称</th>
-                <th>用户账户</th>
-                <th>用户状态</th>
-                <th>创建时间</th>
-                <th>更新时间</th>
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
+    <!-- /.modal -->
 </div>
+<!--addUser end-->
+<script src="../../static/api/bootstrap/jquery.min.js" th:src="@{/api/bootstrap/jquery.min.js}"></script>
+<script src="../../static/api/bootstrap/bootstrap.min.js" th:src="@{/api/bootstrap/bootstrap.min.js}"></script>
+<script src="../../static/api/bootstrap-table/bootstrap-table.js" th:src="@{/api/bootstrap-table/bootstrap-table.js}"></script>
+<script src="../../static/api/bootstrap-table/locale/bootstrap-table-zh-CN.js" th:src="@{/api/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
+<script src="../../static/js/user/user.js" th:src="@{/js/user/user.js}"></script>
+<script src="../../static/api/bootstrap/plugins/select2/js/select2.full.js" th:src="@{/api/bootstrap/plugins/select2/js/select2.full.js}"></script>
+<script src="../../static/api/bootstrap/plugins/select2/js/i18n/zh-CN.js" th:src="@{/api/bootstrap/plugins/select2/js/i18n/zh-CN.js}"></script>
 </body>
 </html>

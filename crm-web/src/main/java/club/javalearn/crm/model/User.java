@@ -1,6 +1,8 @@
 package club.javalearn.crm.model;
 
+import club.javalearn.crm.config.serializer.DefaultDateJsonSerializer;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -60,11 +62,13 @@ public class User {
      * 创建时间
      */
     @JsonView(UserSimpleView.class)
+    @JsonSerialize(using = DefaultDateJsonSerializer.class)
     private Date createDate;
     /**
      * 最后更新时间
      */
     @JsonView(UserSimpleView.class)
+    @JsonSerialize(using = DefaultDateJsonSerializer.class)
     private Date updateDate;
 
     public User(Long userId,String userName,String nickName,String status,Date createDate,Date updateDate){

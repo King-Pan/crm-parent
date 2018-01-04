@@ -15,6 +15,7 @@ spring:
       naming:
         strategy: org.hibernate.cfg.ImprovedNamingStrategy
     show-sql: true
+    format-sql: true
     properties:
       hibernate:
         dialect:
@@ -22,3 +23,6 @@ spring:
   jackson:
     serialization:
       indent_output: true
+security:
+  basic:
+    enabled: true

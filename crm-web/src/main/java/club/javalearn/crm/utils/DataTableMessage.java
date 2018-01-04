@@ -11,8 +11,7 @@ import java.util.List;
  * @date  2017-12-09
  **/
 @Data
-
-public class DataTableMessage<T> {
+public class DataTableMessage<T> implements Message<T>{
     private List<T> data;
     private Integer start;
     private Integer length;

@@ -3,7 +3,10 @@ package club.javalearn.crm.service.impl;
 import club.javalearn.crm.model.User;
 import club.javalearn.crm.repository.UserRepository;
 import club.javalearn.crm.service.UserService;
+import club.javalearn.crm.utils.BootstrapMessage;
 import club.javalearn.crm.utils.DataTableMessage;
+import club.javalearn.crm.utils.Message;
+import lombok.experimental.var;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +32,8 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public DataTableMessage<User> getList(final User user,Pageable pageable) {
-        DataTableMessage<User> message = new DataTableMessage<>();
+    public Message<User> getList(final String param, Pageable pageable) {
+        BootstrapMessage<User> message = new BootstrapMessage<>();
         Page<User> page = userRepository.findAll(new Specification<User>(){
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -38,6 +41,7 @@ public class UserServiceImpl implements UserService {
                 Path<String> userNamePath = root.get("userName");
                 Path<String> statusPath = root.get("status");
                 List<Predicate> wherePredicate = new ArrayList<>();
+                final User user = convertUser(param);
                 if(user!=null){
                     if(StringUtils.isNoneBlank(user.getNickName())){
                         wherePredicate.add(cb.like(nickNamePath,"%"+user.getNickName()+"%"));
@@ -69,11 +73,36 @@ public class UserServiceImpl implements UserService {
                     user1.getCreateDate(),
                     user1.getUpdateDate()));
         }
-        message.setData(userList);
-        message.setLength(page.getSize());
+        message.setRows(userList);
+        message.setLimit(page.getSize());
         message.setStart(page.getNumber());
-        message.setRecordsTotal(page.getTotalElements());
-        message.setRecordsFiltered(page.getTotalElements());
+        message.setTotal(page.getTotalElements());
         return message;
+    }
+
+
+    private User convertUser(String param){
+        User user = null;
+        if(StringUtils.isNoneBlank(param)){
+            String[] values = param.split("&");
+            user = new User();
+            for (String value:values){
+                String[] keys = value.split("=");
+                if(keys.length==2){
+                    if(keys[0].endsWith("userName") && StringUtils.isNoneBlank(keys[1])){
+                        user.setUserName(keys[1].trim());
+                    }
+                    if(keys[0].endsWith("nickName") && StringUtils.isNoneBlank(keys[1])){
+                        user.setNickName(keys[1].trim());
+                    }
+                    if(keys[0].endsWith("status") && StringUtils.isNoneBlank(keys[1]) && !"-1".endsWith(keys[1])){
+                        user.setStatus(keys[1].trim());
+                    }
+                }
+            }
+        }
+
+        return user;
+
     }
 }

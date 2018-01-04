@@ -19,6 +19,7 @@
     </properties>
     <modules>
         <module>crm-web</module>
+        <module>crm-security</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -64,6 +65,16 @@
                 <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-jpa</artifactId>
                 <version>${querydsl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>bootstrap</artifactId>
+                <version>3.3.7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>bootstrap-table</artifactId>
+                <version>1.9.1-1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,0 +1,62 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>登录页面</title>
+    <link rel="stylesheet" href="../static/api/bootstrap/bootstrap.min.css" th:href="@{/api/bootstrap/bootstrap.min.css}" />
+    <link rel="stylesheet" href="../static/css/login.css" th:href="@{/css/login.css}" />
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row-fluid">
+
+        <div class="row-fluid">
+            <div class="span12 center login-header">
+                <h2>致未来CRM管理系统</h2>
+            </div><!--/span-->
+        </div><!--/row-->
+        <div class="row-fluid">
+            <div class="well span5 center login-box">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    请输入你的用户名和密码.
+                </div>
+                <form class="form-horizontal col-sm-offset-3 col-md-offset-3" action="index.html" method="get">
+                    <fieldset>
+                        <div class="form-group has-feedback center">
+                            <div class="col-md-8 login-field">
+                                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                                <input type="text" class="form-control" id="username" name="username" placeholder="用户名" autofocus>
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback center">
+                            <div class="col-md-8 login-field">
+                                <i></i>
+                                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                                <input type="password" class="form-control " id="password" name="password" placeholder="密码">
+                            </div>
+                        </div>
+
+                        <div class="form-group has-feedback center">
+                            <div class="col-md-8 login-field">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"> 记住密码
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback center">
+                            <div class="col-md-8 login-field">
+                                <button type="submit" class="btn btn-success pull-right">登录</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div><!--/span-->
+        </div><!--/row-->
+    </div><!--/fluid-row-->
+</div>
+<script src="../static/api/bootstrap/jquery.min.js" th:src="@{/api/bootstrap/jquery.min.js}"></script>
+<script src="../static/api/bootstrap/bootstrap.min.js" th:src="@{/api/bootstrap/bootstrap.min.js}"></script>
+</body>
+</html>
