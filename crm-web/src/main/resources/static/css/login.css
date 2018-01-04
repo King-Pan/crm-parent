@@ -1,101 +1,87 @@
-body {
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	background-size: cover;
-	height: 100%;
-	background-image: url('imgs/login/login_bg.png');
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-position: bottom left;
-	overflow: hidden;
+.clearfix {
 }
-
-.top {
-	height: 72px;
+.span5{
+	width: 40%;
+}
+.row-fluid {
 	width: 100%;
-	background-color: #fff;
 }
+.row-fluid .span12{
+	width: 100%;
+}
+form {
+	margin: 0 0 18px;
+}
+.form{background: rgba(255,255,255,0.2);width:400px;margin:100px auto;}
+#login_form{display: block;}
 
-.login-form-group {
+.login-field{
+	margin:0 auto;
+}
+div.center, p.center, img.center {
+	margin-left: auto !important;
+	margin-right: auto !important;
+	float: none !important;
+	display: block;
+	text-align: center;
+}
+.form-search input, .form-inline input, .form-horizontal input, .form-search textarea, .form-inline textarea, .form-horizontal textarea, .form-search select, .form-inline select, .form-horizontal select, .form-search .help-inline, .form-inline .help-inline, .form-horizontal .help-inline, .form-search .uneditable-input, .form-inline .uneditable-input, .form-horizontal .uneditable-input, .form-search .input-prepend, .form-inline .input-prepend, .form-horizontal .input-prepend, .form-search .input-append, .form-inline .input-append, .form-horizontal .input-append {
+	display: inline-block;
 	margin-bottom: 0;
 }
-
-.login-input {
-	border: 0;
-	outline: none;
+.input-prepend, .input-append {
+	margin-bottom: 5px;
 }
-
-.login-addon {
-	background: #fff;
-	border: 0;
-	border-radius: 0;
+.row-fluid .span10 {
+	width: 82.905982906%;
 }
-
-a {
-	color: #fff;
+input[class*="span"], select[class*="span"], textarea[class*="span"], .uneditable-input[class*="span"], .row-fluid input[class*="span"], .row-fluid select[class*="span"], .row-fluid textarea[class*="span"], .row-fluid .uneditable-input[class*="span"] {
+	float: none;
+	margin-left: 0;
 }
+.login-box{
 
-.login-btn {
-	background: -webkit-linear-gradient(left, #7da5fe, #406fdc);
-	background: -o-linear-gradient(right, #7da5fe, #406fdc);
-	background: -moz-linear-gradient(right, #7da5fe, #406fdc);
-	background: linear-gradient(to right, #7da5fe, #406fdc);
 }
-
-.inputfont::-webkit-input-placeholder {
-	font-size: 14px;
-	color: #ccc;
+.login-box .input-prepend{
+	margin-bottom: 10px;
 }
-
-.inputfont::-moz-placeholder {
-	font-size: 14px;
-	color: #ccc;
+.login-box .btn{
+	margin-top:15px;
+	width:100%
 }
-
-.inputfont:-ms-input-placeholder {
-	font-size: 14px;
-	color: #ccc;
+.div11{
+	display: table-cell;vertical-align: middle;
 }
-
-.pre_chart {
-	padding-right: 60px;
-	height: 500px;
+.div22{
+	margin: auto;
 }
-
-.pre_login {
-	margin-right: 0;
-	margin-top: 100px;
-	width: 290px;
+.remember {
+	margin-top: 3px;
 }
-
-@media screen and (max-width:1200px) {
-	.pre_chart {
-		position: absolute;
-		left: 0;
-	}
-	.pre_login {
-		position: absolute;
-		right: 0;
-	}
+label {
+	display: block;
+	margin-bottom: 5px;
 }
-
-textarea {
-	resize: none;
-	width: 236px;
-	height: 180px;
+label, input, button, select, textarea {
+	font-size: 13px;
+	font-weight: normal;
+	line-height: 18px;
 }
-
-.dialog-header {
-	background-image: url('imgs/login/banner-3.jpg');
-	color: #fff;
+div.checker span.checked {
+	background-position: -76px -260px;
 }
-
-.dialog-button {
-	padding: 10px 30px;
-	border-radius: 20px;
-	background-color: #3cd180;
+div.checker span {
+	display: -moz-inline-box;
+	display: inline-block;
+	text-align: center;
 }
-
-#regAlert {
-	display: none;
+div.checker span {
+	background-position: 0px -260px;
+	height: 19px;
+	width: 19px;
+}
+div.selector, div.selector span, div.checker span, div.radio span, div.uploader, div.uploader span.action, div.button, div.button span {
+	background-image: url(./imgs/sprite.png);
+	background-repeat: no-repeat;
+	-webkit-font-smoothing: antialiased;
 }

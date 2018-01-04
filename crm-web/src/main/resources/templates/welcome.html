@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页</title>
+    <link rel="stylesheet" href="../../static/api/bootstrap/bootstrap.min.css" th:href="@{/api/bootstrap/bootstrap.min.css}" />
+    <style>
+        .span5{
+            width: 40.170940171000005%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row-fluid">
+
+            <div class="row-fluid">
+                <div class="span12 center login-header">
+                    <h2>欢迎使用致未来CRM管理系统</h2>
+                </div><!--/span-->
+            </div><!--/row-->
+            <div class="row-fluid">
+                <div class="well span5 center login-box">
+                    <div class="alert alert-info">
+                        请输入你的用户名和密码.
+                    </div>
+                    <form class="form-horizontal" action="index.html" method="get">
+                        <fieldset>
+                            <div class="form-group has-feedback">
+                                <label class="col-md-2 control-label" for="username">用户名</label>
+                                <div class="col-md-6">
+                                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="用户名" autofocus>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group has-feedback">
+                                <label class="col-md-2 control-label" for="password">密　码</label>
+                                <div class="col-md-6">
+                                    <i></i>
+                                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="密码">
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div class="input-prepend">
+                                <label class="remember" for="remember"><div class="checker" id="uniform-remember"><span class="checked"><input type="checkbox" id="remember" style="opacity: 0;"></span></div>记住密码</label>
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <p class="center span5">
+                                <button type="submit" class="btn btn-primary">登录</button>
+                            </p>
+                        </fieldset>
+                    </form>
+                </div><!--/span-->
+            </div><!--/row-->
+        </div><!--/fluid-row-->
+    </div>
+    <script src="../../static/api/bootstrap/jquery.min.js" th:src="@{/api/bootstrap/jquery.min.js}"></script>
+    <script src="../../static/api/bootstrap/bootstrap.min.js" th:src="@{/api/bootstrap/bootstrap.min.js}"></script>
+</body>
+</html>

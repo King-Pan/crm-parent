@@ -1,0 +1,136 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>单点登录页面</title>
+    <link rel="stylesheet" type="text/css"
+          href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <style>
+        .span5{
+            width: 40%;
+        }
+        .row-fluid {
+            width: 100%;
+        }
+        .row-fluid .span12{
+            width: 100%;
+        }
+        form {
+            margin: 0 0 18px;
+        }
+        .login-field{
+            margin:0 auto;
+        }
+        div.center, p.center, img.center {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            float: none !important;
+            display: block;
+            text-align: center;
+        }
+        .form-search input, .form-inline input, .form-horizontal input, .form-search textarea, .form-inline textarea, .form-horizontal textarea, .form-search select, .form-inline select, .form-horizontal select, .form-search .help-inline, .form-inline .help-inline, .form-horizontal .help-inline, .form-search .uneditable-input, .form-inline .uneditable-input, .form-horizontal .uneditable-input, .form-search .input-prepend, .form-inline .input-prepend, .form-horizontal .input-prepend, .form-search .input-append, .form-inline .input-append, .form-horizontal .input-append {
+            display: inline-block;
+            margin-bottom: 0;
+        }
+        input[class*="span"], select[class*="span"], textarea[class*="span"], .uneditable-input[class*="span"], .row-fluid input[class*="span"], .row-fluid select[class*="span"], .row-fluid textarea[class*="span"], .row-fluid .uneditable-input[class*="span"] {
+            float: none;
+            margin-left: 0;
+        }
+        .login-box{
+
+        }
+        .login-box .btn{
+            margin-top:15px;
+            width:100%
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        label, input, button, select, textarea {
+            font-size: 13px;
+            font-weight: normal;
+            line-height: 18px;
+        }
+        div.checker span.checked {
+            background-position: -76px -260px;
+        }
+        div.checker span {
+            display: -moz-inline-box;
+            display: inline-block;
+            text-align: center;
+        }
+        div.checker span {
+            background-position: 0px -260px;
+            height: 19px;
+            width: 19px;
+        }
+        div.selector, div.selector span, div.checker span, div.radio span, div.uploader, div.uploader span.action, div.button, div.button span {
+            background-image: url(./imgs/sprite.png);
+            background-repeat: no-repeat;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row-fluid">
+
+        <div class="row-fluid">
+            <div class="span12 center login-header">
+                <h2>单点登录页面</h2>
+            </div><!--/span-->
+        </div><!--/row-->
+        <div class="row-fluid">
+            <div class="well span5 center login-box">
+                <div th:if="${param.error}">
+                    <div class="alert alert-danger">
+                        错误的用户名密码.
+                    </div>
+                </div>
+                <div th:if="${param.logout}">
+                    <div class="alert alert-info">
+                        你已经退出系统.
+                    </div>
+                </div>
+                <form class="form-horizontal col-sm-offset-3 col-md-offset-3" th:action="@{/login}" method="post">
+                    <fieldset>
+                        <div class="form-group has-feedback center">
+                            <div class="col-md-8 login-field">
+                                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                                <input type="text" class="form-control" id="username" name="username" placeholder="用户名" autofocus>
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback center">
+                            <div class="col-md-8 login-field">
+                                <i></i>
+                                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                                <input type="password" class="form-control " id="password" name="password" placeholder="密码">
+                            </div>
+                        </div>
+
+                        <div class="form-group has-feedback center">
+                            <div class="col-md-8 login-field">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"> 记住密码
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback center">
+                            <div class="col-md-8 login-field">
+                                <button type="submit" class="btn btn-success pull-right">登录</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div><!--/span-->
+        </div><!--/row-->
+    </div><!--/fluid-row-->
+</div>
+<script type="text/javascript"
+        src="webjars/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript"
+        src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
