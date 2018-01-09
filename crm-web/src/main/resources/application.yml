@@ -26,3 +26,8 @@ spring:
 security:
   basic:
     enabled: true
+
+basic:
+  security:
+    browser:
+      loginPage: /login
