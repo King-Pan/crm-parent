@@ -80,6 +80,16 @@ public class UserServiceImpl implements UserService {
         return message;
     }
 
+    @Override
+    public void update(User user) {
+        userRepository.save(user);
+    }
+
+    @Override
+    public User create(User user) {
+        return userRepository.save(user);
+    }
+
 
     private User convertUser(String param){
         User user = null;

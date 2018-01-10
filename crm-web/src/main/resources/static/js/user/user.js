@@ -26,7 +26,7 @@ var userObj = {
             showColumns: true,                  //是否显示所有的列
             showRefresh: false,                  //是否显示刷新按钮
             minimumCountColumns: 2,             //最少允许的列数
-            clickToSelect: true,                //是否启用点击选中行
+            clickToSelect: false,                //是否启用点击选中行
             height: 580,                       //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "userId",                     //每一行的唯一标识，一般为主键列
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
@@ -53,7 +53,24 @@ var userObj = {
                 },{
                     field: 'status',
                     title: '状态',
-                    align: 'center'
+                    align: 'center',
+                    formatter: function (data) {
+                        var status;
+                        if(data){
+                            if(data === '0'){
+                                status = '未启用';
+                            }else if(data === '1'){
+                                status = '启用';
+                            }else if(data === '2'){
+                                status = '锁定';
+                            }else if(data === '3'){
+                                status = '删除';
+                            }else{
+                                status = '未知状态';
+                            }
+                        }
+                        return status;
+                    }
                 },{
                     field: 'createDate',
                     title: '创建时间',
@@ -100,10 +117,33 @@ var userObj = {
     openAddDialog:function () {
         enableForm();
         $("#addUserDialog").modal("show");
-        this.saveOrUpdate();
+    },
+    showRequest:function (formData, jqForm, options) {//表单验证
+        var queryString = $.param(formData);   //name=1&address=2
+        var formElement = jqForm[0];              //将jqForm转换为DOM对象
+        var address = formElement.address.value;  //访问jqForm的DOM元素
+        return true;  //只要不返回false，表单都会提交,在这里可以对表单元素进行验证
+    },
+    showResponse:function(responseText, statusText){
+
     },
     saveOrUpdate:function () {
-        this.validate();
+        var options = {
+            //target: '#output',          //把服务器返回的内容放入id为output的元素中
+            beforeSubmit: this.showRequest,  //提交前的回调函数
+            success: this.showResponse,      //提交后的回调函数
+            url: '/user',                 //默认是form的action， 如果申明，则会覆盖
+            type: 'post',               //默认是form的method（get or post），如果申明，则会覆盖
+            //dataType: null,           //html(默认), xml, script, json...接受服务端返回的类型
+            clearForm: true,          //成功提交后，清除所有表单元素的值
+            resetForm: true,          //成功提交后，重置所有表单元素的值
+            timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求
+        };
+        $(".add-form-rule").submit(function () {
+            $(this).ajaxSubmit(options);
+            return false;   //阻止表单默认提交
+        });
+
     },
     validate:function () {
         return true;

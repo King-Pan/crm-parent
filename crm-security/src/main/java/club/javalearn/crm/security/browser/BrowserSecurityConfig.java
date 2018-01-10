@@ -35,6 +35,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
                 .and()
+                //pringSecurty x-frame-options deny错误
+                .headers().frameOptions().disable()
+                .and()
                 .authorizeRequests()
                 //当访问/login.html不需要身份认证
                 .antMatchers("/login").permitAll()
