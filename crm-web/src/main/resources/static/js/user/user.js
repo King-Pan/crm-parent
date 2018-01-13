@@ -141,7 +141,7 @@ var userObj = {
         };
         $(".add-form-rule").submit(function () {
             $(this).ajaxSubmit(options);
-            return false;   //阻止表单默认提交
+            return true;   //阻止表单默认提交
         });
 
     },
