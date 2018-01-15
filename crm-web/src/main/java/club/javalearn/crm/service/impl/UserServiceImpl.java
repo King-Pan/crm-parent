@@ -2,21 +2,26 @@ package club.javalearn.crm.service.impl;
 
 import club.javalearn.crm.model.User;
 import club.javalearn.crm.repository.UserRepository;
+import club.javalearn.crm.security.core.properties.SecurityProperties;
 import club.javalearn.crm.service.UserService;
 import club.javalearn.crm.utils.BootstrapMessage;
-import club.javalearn.crm.utils.DataTableMessage;
+import club.javalearn.crm.utils.Constant;
 import club.javalearn.crm.utils.Message;
-import lombok.experimental.var;
+import club.javalearn.crm.utils.SaltGenerator;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +35,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private SecurityProperties securityProperties;
 
     @Override
     public Message<User> getList(final String param, Pageable pageable) {
@@ -80,14 +91,48 @@ public class UserServiceImpl implements UserService {
         return message;
     }
 
+    @Transactional(rollbackOn = RuntimeException.class)
     @Override
     public void update(User user) {
-        userRepository.save(user);
+        userRepository.updateUser(user.getUserId(),user.getUserName(),user.getNickName(),new Date());
+    }
+
+    @Modifying
+    @Transactional(rollbackOn = RuntimeException.class)
+    @Override
+    public User create(User user) {
+        if(StringUtils.isNoneBlank(user.getUserName())){
+            if(userRepository.getByUserName(user.getUserName())!=null){
+                throw new RuntimeException("用户名已存在");
+            } else{
+                user.setStatus(Constant.USER_DEFAULT_STATUS);
+                user.setCreateDate(new Date());
+                user.setUpdateDate(new Date());
+                user.setSalt(SaltGenerator.createSalt());
+                user.setPassword(passwordEncoder.encode(user.getSalt()+securityProperties.getBrowser().getDefaultPassword()));
+                return userRepository.save(user);
+            }
+        }else{
+            throw new RuntimeException("用户名不能为空");
+        }
+    }
+
+    @Transactional(rollbackOn = RuntimeException.class)
+    @Override
+    public void deleteByStatus(Long userId) {
+        List<Long> userIds = new ArrayList<>();
+        userIds.add(userId);
+        userRepository.deleteByStatus(userIds);
     }
 
     @Override
-    public User create(User user) {
-        return userRepository.save(user);
+    public void deleteBatchByStatus(String userIds) {
+        List<Long> userList = new ArrayList<>();
+        String[] ids = userIds.split(",");
+        for (String id:ids){
+            userList.add(Long.parseLong(id));
+        }
+        userRepository.deleteByStatus(userList);
     }
 
 

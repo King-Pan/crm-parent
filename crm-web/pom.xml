@@ -78,6 +78,10 @@
             <scope>true</scope>
         </dependency>
         <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
             <groupId>club.javalearn</groupId>
             <artifactId>crm-security</artifactId>
             <version>1.0.0-SNAPSHOT</version>
@@ -93,7 +97,15 @@
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
-            <artifactId>jquery-form</artifactId>
+            <artifactId>toastr</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>select2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>font-awesome</artifactId>
         </dependency>
     </dependencies>
     <build>

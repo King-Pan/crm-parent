@@ -1,6 +1,8 @@
 package club.javalearn.crm.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -14,7 +16,8 @@ import java.util.Date;
  **/
 @Entity
 @Table(name = "sys_data_dict")
-@Data
+@Getter
+@Setter
 public class SysDataDict {
     /**
      * 数据字典ID

@@ -25,7 +25,7 @@ public interface UserService {
      * 修改用户
      * @param user 用户信息
      */
-     void update(User user);
+    void update(User user);
 
     /**
      * 创建用户
@@ -33,4 +33,17 @@ public interface UserService {
      * @return 新增后的用户信息,带userId
      */
      User create(User user);
+
+
+    /**
+     * 状态删除用户
+     * @param userId 用户ID
+     */
+    void deleteByStatus(Long userId);
+
+    /**
+     * 批量状态删除用户
+     * @param userIds 用户ID
+     */
+    void deleteBatchByStatus(String userIds);
 }

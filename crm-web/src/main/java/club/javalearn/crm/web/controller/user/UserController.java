@@ -25,7 +25,7 @@ import java.io.File;
  * crm-parent
  *
  * @author king-pan
- * @create 2017-11-19
+ * @date  2017-11-19
  **/
 @RestController
 @RequestMapping("/user")
@@ -36,7 +36,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping(value = {"/page"})
-    public ModelAndView page(HttpServletResponse response){
+    public ModelAndView page(){
         return new ModelAndView("user/user");
     }
 
@@ -57,35 +57,72 @@ public class UserController {
 
     @PutMapping("/{userId:\\d+}")
     @ApiOperation(value = "用户修改服务")
-    public ServerResponse update(@PathVariable String userId,@Valid @RequestBody User user, BindingResult errors) {
+    public ServerResponse update(@RequestBody User user) {
         ServerResponse response;
         try {
-
+            userService.update(user);
             response = ServerResponse.createBySuccessMessage("用户修改成功");
         }catch (Exception e){
             log.error("用户修改失败",e);
             response = ServerResponse.createByErrorMessage("用户修改失败:"+e.getMessage());
         }
-        System.out.println(userId);
-        System.out.println(user);
+        if(log.isDebugEnabled()){
+            log.debug("修改用户ID为{}.", user.getUserId());
+            log.debug("修改后用户为:{}", user);
+        }
         return response;
     }
 
     @PostMapping
     @ApiOperation(value = "用户创建服务")
-    public ServerResponse create() {
-        ServerResponse response = ServerResponse.createBySuccessMessage("用户创建成功");
+    public ServerResponse create(@RequestBody User user) {
+        ServerResponse response;
+        try {
+            userService.create(user);
+            response = ServerResponse.createBySuccessMessage("用户创建成功");
+        }catch (Exception e){
+            log.error("用户修改失败",e);
+            response = ServerResponse.createByErrorMessage("用户创建失败:"+e.getMessage());
+        }
+        if(log.isDebugEnabled()){
+            log.debug("新增用户ID为{}.", user.getUserId());
+            log.debug("新增用户为:{}", user);
+        }
         return response;
     }
 
     @DeleteMapping("/{userId:\\d+}")
-    public void delete(@PathVariable String userId) {
-        System.out.println(userId);
+    @ApiOperation(value = "用户删除服务")
+    public ServerResponse delete(@PathVariable("userId")Long userId) {
+        ServerResponse response;
+        try {
+            userService.deleteByStatus(userId);
+            response = ServerResponse.createBySuccessMessage("用户删除成功");
+        }catch (Exception e){
+            log.error("用户删除失败",e);
+            response = ServerResponse.createByErrorMessage("用户删除失败:"+e.getMessage());
+        }
+        if(log.isDebugEnabled()){
+            log.debug("删除用户ID为{}.", userId);
+        }
+        return response;
     }
 
-    public static void main(String[] args) {
-        String str = "${targetProject}\\java\\${basePackage}\\${moduleName}\\entity\\";
-        System.out.println(str.replaceAll("\\\\", File.separator));
+    @PostMapping("/deleteBatch")
+    @ApiOperation(value = "用户批量删除服务")
+    public ServerResponse deleteBatch(String userIds) {
+        ServerResponse response;
+        try {
+            userService.deleteBatchByStatus(userIds);
+            response = ServerResponse.createBySuccessMessage("用户批量删除成功");
+        }catch (Exception e){
+            log.error("用户批量删除失败",e);
+            response = ServerResponse.createByErrorMessage("用户批量删除失败:"+e.getMessage());
+        }
+        if(log.isDebugEnabled()){
+            log.debug("批量删除用户ID为{}.", userIds);
+        }
+        return response;
     }
 
 }

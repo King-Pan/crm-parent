@@ -1,5 +1,5 @@
 var userObj = {
-    userManageTable:null,
+    sumbitType: 'post',
     //初始化用户管理页面
     init:function () {
         $("#status").select2({
@@ -41,7 +41,8 @@ var userObj = {
                 {
                     field: 'userId',
                     title: '用户ID',
-                    align: 'center'
+                    align: 'center',
+                    visible: false
                 }, {
                     field: 'userName',
                     title: '用户名',
@@ -106,8 +107,6 @@ var userObj = {
             page: (params.offset / params.limit),
             param: $(".form-inline").serialize()
         };
-        console.log(temp);
-        console.log(params);
         return temp;
     },
     //查询按钮
@@ -116,49 +115,173 @@ var userObj = {
     },
     openAddDialog:function () {
         enableForm();
+        $("#userModalLabel").html("新增用户");
+        $("#addUserForm")[0].reset();
+        $("#userId").val('');
+        $("#hiddenMethod").empty();
         $("#addUserDialog").modal("show");
     },
-    showRequest:function (formData, jqForm, options) {//表单验证
-        var queryString = $.param(formData);   //name=1&address=2
-        var formElement = jqForm[0];              //将jqForm转换为DOM对象
-        var address = formElement.address.value;  //访问jqForm的DOM元素
-        return true;  //只要不返回false，表单都会提交,在这里可以对表单元素进行验证
-    },
-    showResponse:function(responseText, statusText){
-
-    },
-    saveOrUpdate:function () {
-        var options = {
-            //target: '#output',          //把服务器返回的内容放入id为output的元素中
-            beforeSubmit: this.showRequest,  //提交前的回调函数
-            success: this.showResponse,      //提交后的回调函数
-            url: '/user',                 //默认是form的action， 如果申明，则会覆盖
-            type: 'post',               //默认是form的method（get or post），如果申明，则会覆盖
-            //dataType: null,           //html(默认), xml, script, json...接受服务端返回的类型
-            clearForm: true,          //成功提交后，清除所有表单元素的值
-            resetForm: true,          //成功提交后，重置所有表单元素的值
-            timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求
-        };
-        $(".add-form-rule").submit(function () {
-            $(this).ajaxSubmit(options);
-            return true;   //阻止表单默认提交
-        });
-
+    saveOrUpdate:function(){
+        if(this.validate()){
+            var data = this.getUpdateData();
+            var url = "/user";
+            if(data && data._method==='put'){
+                url = "/user/" + data.userId;
+                this.sumbitType = 'put';
+            }
+            $.ajax({
+                url: url,
+                type: this.sumbitType,
+                dataType: 'json',
+                contentType: "application/json;charset=UTF-8",
+                data: JSON.stringify(data),
+                success:function (data) {
+                    if(data.status === 0){
+                        //成功后的处理
+                        toastr.success(data.msg);
+                        userObj.doSearch();
+                        $("#addUserDialog").modal("hide");
+                    }else{
+                        //失败后的处理
+                        toastr.warning(data.msg);
+                    }
+                }
+            });
+        }
     },
     validate:function () {
+        var data = this.getUpdateData();
+        if(!data.userName){
+            toastr.warning("用户名不能为空");
+            return false;
+        }
+        if (!data.nickName){
+            toastr.warning("昵称不能为空");
+            return false;
+        }
         return true;
     },
+    getUpdateData:function(){
+        var obj ={};
+        obj.userId = $("#userId").val();
+        obj.userName = $("#userName").val();
+        obj.nickName = $("#nickName").val();
+        if(obj.userId){
+            obj._method = $("#_method").val();
+        }
+        return obj;
+    },
     delete:function(){
+        var rows = $('#userTable').bootstrapTable('getSelections');
+        if(rows && rows.length>0){
+            var ids = [];
+            rows.forEach(function (i) {
+                ids.push(i.userId);
+            });
 
+            Ewin.confirm({ message: "确认要删除选择的数据吗？" }).on(function (e) {
+                if (!e) {
+                    return;
+                }
+                $.ajax({
+                    url: '/user/deleteBatch',
+                    type: 'post',
+                    data: {
+                        userIds: ids.join(",")
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.status === 0) {
+                            //成功后的处理
+                            toastr.success(data.msg);
+                            userObj.doSearch();
+                        } else {
+                            //失败后的处理
+                            toastr.warning(data.msg);
+                        }
+                    }
+                });
+            });
+        }else{
+            toastr.warning("请选择一条需要修改的数据");
+        }
     },
     edit:function(){
-
+        var rows = $('#userTable').bootstrapTable('getSelections');
+        if(rows && rows.length===1){
+            console.log(rows[0]);
+            this.editRow(rows[0].userId);
+        }else{
+            toastr.warning("请选择一条需要修改的数据");
+        }
+    },
+    setForm:function (jsonValue) {
+        var obj = $("#addUserForm");
+        $.each(jsonValue, function (name, ival) {
+            var $obj = obj.find("input[name=" + name + "]");
+            if ($obj.attr("type") === "checkbox") {
+                if (ival !== null) {
+                    var checkboxObj = $("[name=" + name + "]");
+                    var checkArray = ival.split(";");
+                    for (var i = 0; i < checkboxObj.length; i++) {
+                        for (var j = 0; j < checkArray.length; j++) {
+                            if (checkboxObj[i].value === checkArray[j]) {
+                                checkboxObj[i].click();
+                            }
+                        }
+                    }
+                }
+            }
+            else if ($obj.attr("type") === "radio") {
+                $obj.each(function () {
+                    var radioObj = $("[name=" + name + "]");
+                    for (var i = 0; i < radioObj.length; i++) {
+                        if (radioObj[i].value === ival) {
+                            radioObj[i].click();
+                        }
+                    }
+                });
+            }
+            else if ($obj.attr("type") === "textarea") {
+                obj.find("[name=" + name + "]").html(ival);
+            }
+            else {
+                obj.find("[name=" + name + "]").val(ival);
+            }
+        });
     },
     deleteRow:function(id){
-        console.log($('#userTable').bootstrapTable('getRowByUniqueId',id));
+        Ewin.confirm({ message: "确认要删除选择的数据吗？" }).on(function (e) {
+            if (!e) {
+                return;
+            }
+            $.ajax({
+                url: '/user/' + id,
+                type: 'delete',
+                dataType: 'json',
+                contentType: "application/json;charset=UTF-8",
+                success: function (data) {
+                    if (data.status === 0) {
+                        //成功后的处理
+                        toastr.success(data.msg);
+                        userObj.doSearch();
+                    } else {
+                        //失败后的处理
+                        toastr.warning(data.msg);
+                    }
+                }
+            });
+        });
     },
     editRow:function(id){
-        console.log($('#userTable').bootstrapTable('getRowByUniqueId',id));
+        var row = $('#userTable').bootstrapTable('getRowByUniqueId',id);
+        console.log(row);
+        this.setForm(row);
+        $("#userModalLabel").html("修改用户");
+        $("#addUserDialog").modal("show");
+        var $hiddenMethod = $("#hiddenMethod");
+        $hiddenMethod.empty();
+        $hiddenMethod.html('<input id="_method" name="_method" type="hidden" value="put" />');
     }
 };
 //设置表单不可编辑
@@ -174,6 +297,23 @@ function enableForm(){
 }
 $(function () {
     userObj.init();
+    //userObj.initSaveOrUpdate();
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-top-full-width",
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
 });
 function operateFormatter(value, row, index) {//赋予的参数
     return [
