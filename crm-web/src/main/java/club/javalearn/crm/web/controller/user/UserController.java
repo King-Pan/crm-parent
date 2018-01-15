@@ -1,5 +1,6 @@
 package club.javalearn.crm.web.controller.user;
 
+import club.javalearn.crm.common.ServerResponse;
 import club.javalearn.crm.model.User;
 import club.javalearn.crm.repository.UserRepository;
 import club.javalearn.crm.service.UserService;
@@ -11,13 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.File;
 
 
@@ -25,7 +25,7 @@ import java.io.File;
  * crm-parent
  *
  * @author king-pan
- * @create 2017-11-19
+ * @date  2017-11-19
  **/
 @RestController
 @RequestMapping("/user")
@@ -36,19 +36,16 @@ public class UserController {
     private UserService userService;
 
     @GetMapping(value = {"/page"})
-    public ModelAndView page(HttpServletResponse response){
-        response.setHeader("X-Frame-Options", "SAMEORIGIN");
+    public ModelAndView page(){
         return new ModelAndView("user/user");
     }
 
 
     /**
-     * $("#iframe_box").find(".show_iframe:hidden");
-     * $($("#iframe_box").find(".show_iframe:hidden").document).find(".form-inline").serialize()
-     * $("#iframe_box").find("iframe[src='user/page']").find(".form-inline").serialize()
-     * @param user
-     * @param pageable
-     * @return
+     *
+     * @param param 查询参数
+     * @param pageable 分页参数
+     * @return 封装的用户分页数据
      */
     @GetMapping
     @ApiOperation(value = "用户查询服务")
@@ -57,9 +54,75 @@ public class UserController {
         return userService.getList(param,pageable);
     }
 
-    public static void main(String[] args) {
-        String str = "${targetProject}\\java\\${basePackage}\\${moduleName}\\entity\\";
-        System.out.println(str.replaceAll("\\\\", File.separator));
+
+    @PutMapping("/{userId:\\d+}")
+    @ApiOperation(value = "用户修改服务")
+    public ServerResponse update(@RequestBody User user) {
+        ServerResponse response;
+        try {
+            userService.update(user);
+            response = ServerResponse.createBySuccessMessage("用户修改成功");
+        }catch (Exception e){
+            log.error("用户修改失败",e);
+            response = ServerResponse.createByErrorMessage("用户修改失败:"+e.getMessage());
+        }
+        if(log.isDebugEnabled()){
+            log.debug("修改用户ID为{}.", user.getUserId());
+            log.debug("修改后用户为:{}", user);
+        }
+        return response;
+    }
+
+    @PostMapping
+    @ApiOperation(value = "用户创建服务")
+    public ServerResponse create(@RequestBody User user) {
+        ServerResponse response;
+        try {
+            userService.create(user);
+            response = ServerResponse.createBySuccessMessage("用户创建成功");
+        }catch (Exception e){
+            log.error("用户修改失败",e);
+            response = ServerResponse.createByErrorMessage("用户创建失败:"+e.getMessage());
+        }
+        if(log.isDebugEnabled()){
+            log.debug("新增用户ID为{}.", user.getUserId());
+            log.debug("新增用户为:{}", user);
+        }
+        return response;
+    }
+
+    @DeleteMapping("/{userId:\\d+}")
+    @ApiOperation(value = "用户删除服务")
+    public ServerResponse delete(@PathVariable("userId")Long userId) {
+        ServerResponse response;
+        try {
+            userService.deleteByStatus(userId);
+            response = ServerResponse.createBySuccessMessage("用户删除成功");
+        }catch (Exception e){
+            log.error("用户删除失败",e);
+            response = ServerResponse.createByErrorMessage("用户删除失败:"+e.getMessage());
+        }
+        if(log.isDebugEnabled()){
+            log.debug("删除用户ID为{}.", userId);
+        }
+        return response;
+    }
+
+    @PostMapping("/deleteBatch")
+    @ApiOperation(value = "用户批量删除服务")
+    public ServerResponse deleteBatch(String userIds) {
+        ServerResponse response;
+        try {
+            userService.deleteBatchByStatus(userIds);
+            response = ServerResponse.createBySuccessMessage("用户批量删除成功");
+        }catch (Exception e){
+            log.error("用户批量删除失败",e);
+            response = ServerResponse.createByErrorMessage("用户批量删除失败:"+e.getMessage());
+        }
+        if(log.isDebugEnabled()){
+            log.debug("批量删除用户ID为{}.", userIds);
+        }
+        return response;
     }
 
 }

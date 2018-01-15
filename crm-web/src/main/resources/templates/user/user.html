@@ -1,52 +1,64 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>用户管理</title>
-    <link rel="stylesheet" href="../../static/api/bootstrap-table/bootstrap-table.css" th:href="@{/api/bootstrap-table/bootstrap-table.css}" />
-    <link rel="stylesheet" href="../../static/api/bootstrap/bootstrap.min.css" th:href="@{/api/bootstrap/bootstrap.min.css}" />
-    <link rel="stylesheet" href="../../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}">
-    <link rel="stylesheet" href="../../static/api/bootstrap/plugins/select2/css/select2.min.css" th:href="@{/api/bootstrap/plugins/select2/css/select2.min.css}">
+    <link rel="stylesheet" href="/webjars/bootstrap-table/1.9.1-1/bootstrap-table.css"
+          th:href="@{/webjars/bootstrap-table/1.9.1-1/bootstrap-table.css}"/>
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="/webjars/font-awesome/4.7.0/css/font-awesome.min.css" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" href="/webjars/select2/4.0.3/css/select2.min.css"
+          th:href="@{/webjars/select2/4.0.3/css/select2.min.css}">
+    <link rel="stylesheet" href="/webjars/toastr/2.1.2/build/toastr.css"
+          th:href="@{/webjars/toastr/2.1.2/build/toastr.css}">
     <style>
-        .search-header{
+        .search-header {
             margin-top: 5px;
         }
-        .form-label-item{
-            min-width:100px;
+
+        .form-label-item {
+            min-width: 100px;
             margin-left: 10px;
         }
-        .form-control-select{
+
+        .form-control-select {
             width: 172px;
         }
-        div.form-group{
+
+        div.form-group {
             margin-top: 10px;
         }
+
         .qry-btn {
             padding: 5px 8px;
             border: 1px solid #46b8da;
             border-radius: 3px;
             color: #46b8da;
         }
+
         a {
             text-decoration: none;
             cursor: pointer;
         }
-        a:hover{
+
+        a:hover {
             text-decoration: none;
         }
-        .qry-btn:hover{
+
+        .qry-btn:hover {
             color: #fff;
             background-color: #5bc0de;
         }
     </style>
 
 
-
 </head>
 <body>
 
 <div class="panel-body" style="padding-bottom:0px;">
-    <div class="panel " style="margin-bottom:0px; border: solid 1px #eee;" >
-        <div class="panel-heading" style="font-weight: bold; background-color: #f5fafe; border-bottom: solid 1px #eee;">查询条件
+    <div class="panel " style="margin-bottom:0px; border: solid 1px #eee;">
+        <div class="panel-heading" style="font-weight: bold; background-color: #f5fafe; border-bottom: solid 1px #eee;">
+            查询条件
             <span style="float:right;">
 	            	<a class="qry-btn" onclick="userObj.doSearch()">
 						<span class="glyphicon glyphicon-search"></span>查询
@@ -79,9 +91,12 @@
     <div class="content">
         <div class="table-responsive">
             <div id="toolbar">
-                <a href="javascript:void(0);" class="btn btn-primary" onclick="userObj.openAddDialog();"><i class="icon-plus icon-large"></i>新增</a>
-                <a href="javascript:void(0);" class="btn btn-warning" onclick="userObj.edit();"><i class="icon-pencil icon-large"></i>修改</a>
-                <a href="javascript:void(0);" class="btn btn-danger"  onclick="userObj.delete();"><i class="icon-trash icon-large"></i>删除</a>
+                <a href="javascript:void(0);" class="btn btn-primary" onclick="userObj.openAddDialog();"><i
+                        class="icon-plus icon-large"></i>新增</a>
+                <a href="javascript:void(0);" class="btn btn-warning" onclick="userObj.edit();"><i
+                        class="icon-pencil icon-large"></i>修改</a>
+                <a href="javascript:void(0);" class="btn btn-danger" onclick="userObj.delete();"><i
+                        class="icon-trash icon-large"></i>删除</a>
             </div>
             <table id="userTable" class="table-striped table-hover" data-mobile-responsive="true">
             </table>
@@ -92,25 +107,29 @@
 
 
 <!--addUser begin-->
-<div class="modal fade" id="addUserDialog" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+<div class="modal fade" id="addUserDialog" tabindex="-1" role="dialog" aria-labelledby="userModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="userModalLabel">新增用户</h4>
-            </div>
-            <div style="padding-right:1px;">
-                <div style="height:355px;">
-                    <form class="form-horizontal add-form-rule" id="addUserForm">
+            <form class="form-horizontal add-form-rule" id="addUserForm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="userModalLabel">新增用户</h4>
+                    <div id="hiddenMethod"></div>
+                </div>
+                <div style="padding-right:1px;">
+                    <div style="height:355px;">
+
                         <div class="modal-body" style="width: 100%; height:355px;">
                             <input placeholder="" name="userId" id="userId"
-                                   value="" class="form-control" type="hidden">
+                                   value="" type="hidden">
                             <div class="form-group">
 			          				<span class="col-sm-3 control-label">
 										用户名
 			          				</span>
                                 <div class="col-sm-6">
-                                    <input placeholder="" name="userName" id="userName" class="form-control" type="text">
+                                    <input placeholder="" name="userName" id="userName" class="form-control"
+                                           type="text">
                                 </div>
                                 <span class="col-sm-3" id="userNameInfo"></span>
                             </div>
@@ -125,25 +144,30 @@
                                 <span class="col-sm-3" id="nickNameInfo"></span>
                             </div>
                         </div>
-                    </form>
+
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="submit-btn" class="btn btn-info btn-sm submit-btn" onclick="userObj.saveOrUpdate()">提交</button>
-                <button type="button" class="btn btn-info btn-sm" data-dismiss="modal">关闭</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" id="submit-btn" class="btn btn-info btn-sm submit-btn" onclick="userObj.saveOrUpdate()">提交</button>
+                    <button type="button" class="btn btn-info btn-sm" data-dismiss="modal">关闭</button>
+                </div>
+            </form>
         </div>
         <!-- /.modal-content -->
     </div>
     <!-- /.modal -->
 </div>
 <!--addUser end-->
-<script src="../../static/api/bootstrap/jquery.min.js" th:src="@{/api/bootstrap/jquery.min.js}"></script>
-<script src="../../static/api/bootstrap/bootstrap.min.js" th:src="@{/api/bootstrap/bootstrap.min.js}"></script>
-<script src="../../static/api/bootstrap-table/bootstrap-table.js" th:src="@{/api/bootstrap-table/bootstrap-table.js}"></script>
-<script src="../../static/api/bootstrap-table/locale/bootstrap-table-zh-CN.js" th:src="@{/api/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
+<script src="/webjars/jquery/1.11.1/jquery.min.js" th:src="@{/webjars/jquery/1.11.1/jquery.min.js}" ></script>
+<script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+<script src="/webjars/bootstrap-table/1.9.1-1/bootstrap-table.min.js" th:src="@{/webjars/bootstrap-table/1.9.1-1/bootstrap-table.min.js}"></script>
+<script src="/webjars/bootstrap-table/1.9.1-1/locale/bootstrap-table-zh-CN.js" th:src="@{/webjars/bootstrap-table/1.9.1-1/locale/bootstrap-table-zh-CN.js}"></script>
+<script src="/webjars/toastr/2.1.2/build/toastr.min.js"
+        th:src="@{/webjars/toastr/2.1.2/build/toastr.min.js}"></script>
+<script src="/webjars/select2/4.0.3/js/select2.full.min.js" th:src="@{/webjars/select2/4.0.3/js/select2.full.min.js}"></script>
+<script src="/webjars/select2/4.0.3/js/i18n/zh-CN.js"
+        th:src="@{/webjars/select2/4.0.3/js/i18n/zh-CN.js}"></script>
+<script src="../../static/api/Ewin.js" th:src="@{/api/Ewin.js}"></script>
 <script src="../../static/js/user/user.js" th:src="@{/js/user/user.js}"></script>
-<script src="../../static/api/bootstrap/plugins/select2/js/select2.full.js" th:src="@{/api/bootstrap/plugins/select2/js/select2.full.js}"></script>
-<script src="../../static/api/bootstrap/plugins/select2/js/i18n/zh-CN.js" th:src="@{/api/bootstrap/plugins/select2/js/i18n/zh-CN.js}"></script>
 </body>
 </html>

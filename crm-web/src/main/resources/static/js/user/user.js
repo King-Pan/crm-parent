@@ -1,5 +1,5 @@
 var userObj = {
-    userManageTable:null,
+    sumbitType: 'post',
     //初始化用户管理页面
     init:function () {
         $("#status").select2({
@@ -26,7 +26,7 @@ var userObj = {
             showColumns: true,                  //是否显示所有的列
             showRefresh: false,                  //是否显示刷新按钮
             minimumCountColumns: 2,             //最少允许的列数
-            clickToSelect: true,                //是否启用点击选中行
+            clickToSelect: false,                //是否启用点击选中行
             height: 580,                       //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "userId",                     //每一行的唯一标识，一般为主键列
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
@@ -41,7 +41,8 @@ var userObj = {
                 {
                     field: 'userId',
                     title: '用户ID',
-                    align: 'center'
+                    align: 'center',
+                    visible: false
                 }, {
                     field: 'userName',
                     title: '用户名',
@@ -53,7 +54,24 @@ var userObj = {
                 },{
                     field: 'status',
                     title: '状态',
-                    align: 'center'
+                    align: 'center',
+                    formatter: function (data) {
+                        var status;
+                        if(data){
+                            if(data === '0'){
+                                status = '未启用';
+                            }else if(data === '1'){
+                                status = '启用';
+                            }else if(data === '2'){
+                                status = '锁定';
+                            }else if(data === '3'){
+                                status = '删除';
+                            }else{
+                                status = '未知状态';
+                            }
+                        }
+                        return status;
+                    }
                 },{
                     field: 'createDate',
                     title: '创建时间',
@@ -89,8 +107,6 @@ var userObj = {
             page: (params.offset / params.limit),
             param: $(".form-inline").serialize()
         };
-        console.log(temp);
-        console.log(params);
         return temp;
     },
     //查询按钮
@@ -99,26 +115,173 @@ var userObj = {
     },
     openAddDialog:function () {
         enableForm();
+        $("#userModalLabel").html("新增用户");
+        $("#addUserForm")[0].reset();
+        $("#userId").val('');
+        $("#hiddenMethod").empty();
         $("#addUserDialog").modal("show");
-        this.saveOrUpdate();
     },
-    saveOrUpdate:function () {
-        this.validate();
+    saveOrUpdate:function(){
+        if(this.validate()){
+            var data = this.getUpdateData();
+            var url = "/user";
+            if(data && data._method==='put'){
+                url = "/user/" + data.userId;
+                this.sumbitType = 'put';
+            }
+            $.ajax({
+                url: url,
+                type: this.sumbitType,
+                dataType: 'json',
+                contentType: "application/json;charset=UTF-8",
+                data: JSON.stringify(data),
+                success:function (data) {
+                    if(data.status === 0){
+                        //成功后的处理
+                        toastr.success(data.msg);
+                        userObj.doSearch();
+                        $("#addUserDialog").modal("hide");
+                    }else{
+                        //失败后的处理
+                        toastr.warning(data.msg);
+                    }
+                }
+            });
+        }
     },
     validate:function () {
+        var data = this.getUpdateData();
+        if(!data.userName){
+            toastr.warning("用户名不能为空");
+            return false;
+        }
+        if (!data.nickName){
+            toastr.warning("昵称不能为空");
+            return false;
+        }
         return true;
     },
+    getUpdateData:function(){
+        var obj ={};
+        obj.userId = $("#userId").val();
+        obj.userName = $("#userName").val();
+        obj.nickName = $("#nickName").val();
+        if(obj.userId){
+            obj._method = $("#_method").val();
+        }
+        return obj;
+    },
     delete:function(){
+        var rows = $('#userTable').bootstrapTable('getSelections');
+        if(rows && rows.length>0){
+            var ids = [];
+            rows.forEach(function (i) {
+                ids.push(i.userId);
+            });
 
+            Ewin.confirm({ message: "确认要删除选择的数据吗？" }).on(function (e) {
+                if (!e) {
+                    return;
+                }
+                $.ajax({
+                    url: '/user/deleteBatch',
+                    type: 'post',
+                    data: {
+                        userIds: ids.join(",")
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.status === 0) {
+                            //成功后的处理
+                            toastr.success(data.msg);
+                            userObj.doSearch();
+                        } else {
+                            //失败后的处理
+                            toastr.warning(data.msg);
+                        }
+                    }
+                });
+            });
+        }else{
+            toastr.warning("请选择一条需要修改的数据");
+        }
     },
     edit:function(){
-
+        var rows = $('#userTable').bootstrapTable('getSelections');
+        if(rows && rows.length===1){
+            console.log(rows[0]);
+            this.editRow(rows[0].userId);
+        }else{
+            toastr.warning("请选择一条需要修改的数据");
+        }
+    },
+    setForm:function (jsonValue) {
+        var obj = $("#addUserForm");
+        $.each(jsonValue, function (name, ival) {
+            var $obj = obj.find("input[name=" + name + "]");
+            if ($obj.attr("type") === "checkbox") {
+                if (ival !== null) {
+                    var checkboxObj = $("[name=" + name + "]");
+                    var checkArray = ival.split(";");
+                    for (var i = 0; i < checkboxObj.length; i++) {
+                        for (var j = 0; j < checkArray.length; j++) {
+                            if (checkboxObj[i].value === checkArray[j]) {
+                                checkboxObj[i].click();
+                            }
+                        }
+                    }
+                }
+            }
+            else if ($obj.attr("type") === "radio") {
+                $obj.each(function () {
+                    var radioObj = $("[name=" + name + "]");
+                    for (var i = 0; i < radioObj.length; i++) {
+                        if (radioObj[i].value === ival) {
+                            radioObj[i].click();
+                        }
+                    }
+                });
+            }
+            else if ($obj.attr("type") === "textarea") {
+                obj.find("[name=" + name + "]").html(ival);
+            }
+            else {
+                obj.find("[name=" + name + "]").val(ival);
+            }
+        });
     },
     deleteRow:function(id){
-        console.log($('#userTable').bootstrapTable('getRowByUniqueId',id));
+        Ewin.confirm({ message: "确认要删除选择的数据吗？" }).on(function (e) {
+            if (!e) {
+                return;
+            }
+            $.ajax({
+                url: '/user/' + id,
+                type: 'delete',
+                dataType: 'json',
+                contentType: "application/json;charset=UTF-8",
+                success: function (data) {
+                    if (data.status === 0) {
+                        //成功后的处理
+                        toastr.success(data.msg);
+                        userObj.doSearch();
+                    } else {
+                        //失败后的处理
+                        toastr.warning(data.msg);
+                    }
+                }
+            });
+        });
     },
     editRow:function(id){
-        console.log($('#userTable').bootstrapTable('getRowByUniqueId',id));
+        var row = $('#userTable').bootstrapTable('getRowByUniqueId',id);
+        console.log(row);
+        this.setForm(row);
+        $("#userModalLabel").html("修改用户");
+        $("#addUserDialog").modal("show");
+        var $hiddenMethod = $("#hiddenMethod");
+        $hiddenMethod.empty();
+        $hiddenMethod.html('<input id="_method" name="_method" type="hidden" value="put" />');
     }
 };
 //设置表单不可编辑
@@ -134,6 +297,23 @@ function enableForm(){
 }
 $(function () {
     userObj.init();
+    //userObj.initSaveOrUpdate();
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-top-full-width",
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
 });
 function operateFormatter(value, row, index) {//赋予的参数
     return [

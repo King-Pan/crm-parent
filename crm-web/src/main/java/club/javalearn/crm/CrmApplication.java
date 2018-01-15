@@ -2,6 +2,7 @@ package club.javalearn.crm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 
 /**
  * crm-parent
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author king-pan
  * @create 2017-11-18
  **/
+@ServletComponentScan
 @SpringBootApplication
 public class CrmApplication {
 

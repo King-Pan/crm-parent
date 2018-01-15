@@ -78,6 +78,10 @@
             <scope>true</scope>
         </dependency>
         <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
             <groupId>club.javalearn</groupId>
             <artifactId>crm-security</artifactId>
             <version>1.0.0-SNAPSHOT</version>
@@ -85,6 +89,23 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap-table</artifactId>
+        </dependency>
+        <!--腾讯云短信服务-->
+        <dependency>
+            <groupId>com.github.qcloudsms</groupId>
+            <artifactId>sms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>toastr</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>select2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>font-awesome</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -107,7 +128,7 @@
                             <goal>process</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>target/generated-sources/java</outputDirectory>
+                            <outputDirectory>src/main/java</outputDirectory>
                             <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
                         </configuration>
                     </execution>

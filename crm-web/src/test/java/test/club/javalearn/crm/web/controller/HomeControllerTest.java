@@ -19,8 +19,5 @@ public class HomeControllerTest extends CommonControllerTest {
         mockMvc.perform(get("/")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
     }
 
-    @Test
-    public void testGetUserList() throws Exception{
-        mockMvc.perform(get("/user").param("userName","a")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-    }
+
 }
