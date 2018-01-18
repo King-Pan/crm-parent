@@ -9,7 +9,7 @@ package club.javalearn.crm.utils;
 public class Constant {
 
     /**
-     * 用户默认的状态
+     * 数据默认的状态
      */
-    public static final String USER_DEFAULT_STATUS = "1";
+    public static final String DEFAULT_STATUS = "1";
 }

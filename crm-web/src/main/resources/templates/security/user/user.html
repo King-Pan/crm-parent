@@ -1,58 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8"/>
-    <title>用户管理</title>
-    <link rel="stylesheet" href="/webjars/bootstrap-table/1.9.1-1/bootstrap-table.css"
-          th:href="@{/webjars/bootstrap-table/1.9.1-1/bootstrap-table.css}"/>
-    <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"
-          th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" href="/webjars/font-awesome/4.7.0/css/font-awesome.min.css" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
-    <link rel="stylesheet" href="/webjars/select2/4.0.3/css/select2.min.css"
-          th:href="@{/webjars/select2/4.0.3/css/select2.min.css}">
-    <link rel="stylesheet" href="/webjars/toastr/2.1.2/build/toastr.css"
-          th:href="@{/webjars/toastr/2.1.2/build/toastr.css}">
-    <style>
-        .search-header {
-            margin-top: 5px;
-        }
-
-        .form-label-item {
-            min-width: 100px;
-            margin-left: 10px;
-        }
-
-        .form-control-select {
-            width: 172px;
-        }
-
-        div.form-group {
-            margin-top: 10px;
-        }
-
-        .qry-btn {
-            padding: 5px 8px;
-            border: 1px solid #46b8da;
-            border-radius: 3px;
-            color: #46b8da;
-        }
-
-        a {
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        a:hover {
-            text-decoration: none;
-        }
-
-        .qry-btn:hover {
-            color: #fff;
-            background-color: #5bc0de;
-        }
-    </style>
-
-
-</head>
+<head th:include="/common/model_meta :: modelHeader('用户管理')"></head>
 <body>
 
 <div class="panel-body" style="padding-bottom:0px;">
@@ -158,16 +105,7 @@
     <!-- /.modal -->
 </div>
 <!--addUser end-->
-<script src="/webjars/jquery/1.11.1/jquery.min.js" th:src="@{/webjars/jquery/1.11.1/jquery.min.js}" ></script>
-<script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
-<script src="/webjars/bootstrap-table/1.9.1-1/bootstrap-table.min.js" th:src="@{/webjars/bootstrap-table/1.9.1-1/bootstrap-table.min.js}"></script>
-<script src="/webjars/bootstrap-table/1.9.1-1/locale/bootstrap-table-zh-CN.js" th:src="@{/webjars/bootstrap-table/1.9.1-1/locale/bootstrap-table-zh-CN.js}"></script>
-<script src="/webjars/toastr/2.1.2/build/toastr.min.js"
-        th:src="@{/webjars/toastr/2.1.2/build/toastr.min.js}"></script>
-<script src="/webjars/select2/4.0.3/js/select2.full.min.js" th:src="@{/webjars/select2/4.0.3/js/select2.full.min.js}"></script>
-<script src="/webjars/select2/4.0.3/js/i18n/zh-CN.js"
-        th:src="@{/webjars/select2/4.0.3/js/i18n/zh-CN.js}"></script>
-<script src="../../static/api/Ewin.js" th:src="@{/api/Ewin.js}"></script>
-<script src="../../static/js/user/user.js" th:src="@{/js/user/user.js}"></script>
+<div th:include="/common/model_onloadJS :: onloadJS"></div>
+<script src="../../../static/js/security/user/user.js" th:src="@{/js/security/user/user.js}"></script>
 </body>
 </html>

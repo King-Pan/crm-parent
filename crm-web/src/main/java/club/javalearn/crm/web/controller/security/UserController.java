@@ -1,4 +1,4 @@
-package club.javalearn.crm.web.controller.user;
+package club.javalearn.crm.web.controller.security;
 
 import club.javalearn.crm.common.ServerResponse;
 import club.javalearn.crm.model.User;
@@ -37,7 +37,7 @@ public class UserController {
 
     @GetMapping(value = {"/page"})
     public ModelAndView page(){
-        return new ModelAndView("user/user");
+        return new ModelAndView("security/user/user");
     }
 
 

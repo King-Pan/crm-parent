@@ -2,96 +2,102 @@ package club.javalearn.crm.model;
 
 import club.javalearn.crm.config.serializer.DefaultDateJsonSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
  * crm-parent
  *
  * @author king-pan
- * @create 2017-11-29
+ * @date 2018-01-17
  **/
-@Entity
-@Table(name = "sys_user")
-@Getter
 @Setter
+@Getter
 @ToString(exclude = {"roles"})
+@Entity
+@Table(name = "sys_resource")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Resource {
 
     /**
-     * 用户编号
+     * 资源ID
      */
     @Id
     @GeneratedValue
-    private Long userId;
+    private Long resourceId;
+
     /**
-     * 用户名称
+     * 模块名称
+     */
+    private String modelName;
+
+    /**
+     * 父类ID
+     */
+    private String parentId;
+
+    /**
+     * 树的层级
+     */
+    private String level;
+
+    /**
+     * 资源名称
      */
     @Column(unique = true)
-    private String userName;
+    private String resourceName;
+
     /**
-     * 用户昵称
+     * 资源表达式
      */
-    private String nickName;
+    private String expression;
+
     /**
-     * 用户密码
+     * 资源描述
      */
-    private String password;
+    private String resourceDesc;
+
     /**
-     * 加密盐
-     */
-    private String salt;
-    /**
-     * 用户状态
+     * 状态
      */
     @Column(length = 1)
     private String status;
+
     /**
-     * 创建时间
+     * 创建日期
      */
     @JsonSerialize(using = DefaultDateJsonSerializer.class)
     private Date createDate;
+
     /**
-     * 最后更新时间
+     * 更新日期
      */
     @JsonSerialize(using = DefaultDateJsonSerializer.class)
     private Date updateDate;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany
+    @JoinTable(name = "sys_role_resource",joinColumns = {@JoinColumn(name = "resource_id", referencedColumnName = "resourceId")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "roleId")})
     @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 
-
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof User){
-            User user = (User)obj;
-            return user.getUserId().equals(this.getUserId());
+        if(obj instanceof Resource){
+            Resource resource = (Resource)obj;
+            return  resource.getResourceId().equals(this.getResourceId());
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return this.getUserId().hashCode();
-    }
-
-
-    public User(Long userId,String userName,String nickName,String status,Date createDate,Date updateDate){
-        this.userId = userId;
-        this.userName = userName;
-        this.nickName = nickName;
-        this.status = status;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
+        return this.getResourceId().hashCode();
     }
 }

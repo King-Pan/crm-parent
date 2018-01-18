@@ -13,42 +13,39 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
 
 /**
+ * QRole is a Querydsl query type for Role
  * @author king-pan
  * @date 2018-01-16
  */
 @Generated("com.querydsl.codegen.EntitySerializer")
-public class QUser extends EntityPathBase<User> {
+public class QRole extends EntityPathBase<Role> {
 
-    private static final long serialVersionUID = -568287772L;
+    private static final long serialVersionUID = -568380785L;
 
-    public static final QUser user = new QUser("user");
+    public static final QRole role = new QRole("role");
 
     public final DateTimePath<java.util.Date> createDate = createDateTime("createDate", java.util.Date.class);
 
-    public final StringPath nickName = createString("nickName");
+    public final StringPath roleDesc = createString("roleDesc");
 
-    public final StringPath password = createString("password");
+    public final NumberPath<Long> roleId = createNumber("roleId", Long.class);
 
-    public final StringPath salt = createString("salt");
+    public final StringPath roleName = createString("roleName");
 
     public final StringPath status = createString("status");
 
     public final DateTimePath<java.util.Date> updateDate = createDateTime("updateDate", java.util.Date.class);
 
-    public final NumberPath<Long> userId = createNumber("userId", Long.class);
-
-    public final StringPath userName = createString("userName");
-
-    public QUser(String variable) {
-        super(User.class, forVariable(variable));
+    public QRole(String variable) {
+        super(Role.class, forVariable(variable));
     }
 
-    public QUser(Path<? extends User> path) {
+    public QRole(Path<? extends Role> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QUser(PathMetadata metadata) {
-        super(User.class, metadata);
+    public QRole(PathMetadata metadata) {
+        super(Role.class, metadata);
     }
 
 }

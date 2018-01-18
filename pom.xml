@@ -114,6 +114,21 @@
                 <artifactId>font-awesome</artifactId>
                 <version>4.7.0</version>
             </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>jquery.treegrid</artifactId>
+                <version>0.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>bootstrap-treeview</artifactId>
+                <version>1.2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>github-com-tui2tone-flat-admin-bootstrap-templates</artifactId>
+                <version>v2.1.2</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

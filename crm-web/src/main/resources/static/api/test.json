@@ -1,0 +1,45 @@
+[
+  {
+    Id: 1,
+    Name: "系统设置",
+    Url: null,
+    ParentId: null,
+    Level: 1,
+    CreateTime: null,
+    Status: 1,
+    SortOrder: 1
+  },
+  {
+    Id: 2,
+    Name: "菜单管理",
+    Url: "/Systems/Menu/Index",
+    ParentId: 1,
+    Level: 2,
+    CreateTime: null,
+    Status: 1
+  },
+  {
+    Id: 3,
+    Name: "订单管理",
+    Url: null,
+    ParentId: null,
+    Level: 1,
+    CreateTime: "2017-05-31 17:05:27"
+  },
+  {
+    Id: 4,
+    Name: "基础数据",
+    Url: null,
+    ParentId: null,
+    Level: 1,
+    CreateTime: "2017-05-31 17:05:55"
+  },
+  {
+    Id: 5,
+    Name: "新增订单",
+    Url: "/order/add",
+    ParentId: 3,
+    Level: 2,
+    CreateTime: "2017-05-31 17:07:03"
+  }
+]

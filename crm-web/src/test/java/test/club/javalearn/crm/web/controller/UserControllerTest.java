@@ -7,6 +7,7 @@ import test.club.javalearn.crm.web.CommonControllerTest;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 /**
  * crm-parent
@@ -29,5 +30,10 @@ public class UserControllerTest extends CommonControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         System.out.println(result);
+    }
+
+    @Test
+    public void testDeleteUser() throws Exception{
+        mockMvc.perform(delete("/user/1").contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
     }
 }

@@ -1,4 +1,4 @@
-var userObj = {
+var roleObj = {
     sumbitType: 'post',
     //初始化用户管理页面
     init:function () {
@@ -6,8 +6,8 @@ var userObj = {
             width:172,
             height:34
         });
-        $('#userTable').bootstrapTable({
-            url: '/user',         //请求后台的URL（*）
+        $('#roleTable').bootstrapTable({
+            url: '/role',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -28,7 +28,7 @@ var userObj = {
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: false,                //是否启用点击选中行
             height: 580,                       //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-            uniqueId: "userId",                     //每一行的唯一标识，一般为主键列
+            uniqueId: "roleId",                     //每一行的唯一标识，一般为主键列
             showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图
             detailView: false,                   //是否显示父子表
@@ -39,17 +39,17 @@ var userObj = {
                     align: 'center'
                 },
                 {
-                    field: 'userId',
-                    title: '用户ID',
+                    field: 'roleId',
+                    title: '角色ID',
                     align: 'center',
                     visible: false
                 }, {
-                    field: 'userName',
-                    title: '用户名',
+                    field: 'roleName',
+                    title: '角色名称',
                     align: 'center'
                 }, {
-                    field: 'nickName',
-                    title: '昵称',
+                    field: 'roleDesc',
+                    title: '角色备注',
                     align: 'center'
                 },{
                     field: 'status',
@@ -102,31 +102,32 @@ var userObj = {
     },
     //获取查询参数
     queryParams:function (params) {
+        var params = $(".form-inline").serialize();
         var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
             size: params.limit,   //页面大小
             page: (params.offset / params.limit),
-            param: $(".form-inline").serialize()
+            param: decodeURIComponent(params)
         };
         return temp;
     },
     //查询按钮
     doSearch:function () {
-        $('#userTable').bootstrapTable('refresh');
+        $('#roleTable').bootstrapTable('refresh');
     },
     openAddDialog:function () {
         enableForm();
-        $("#userModalLabel").html("新增用户");
-        $("#addUserForm")[0].reset();
-        $("#userId").val('');
+        $("#roleModalLabel").html("新增用户");
+        $("#addRoleForm")[0].reset();
+        $("#roleId").val('');
         $("#hiddenMethod").empty();
-        $("#addUserDialog").modal("show");
+        $("#addRoleDialog").modal("show");
     },
     saveOrUpdate:function(){
         if(this.validate()){
             var data = this.getUpdateData();
-            var url = "/user";
+            var url = "/role";
             if(data && data._method==='put'){
-                url = "/user/" + data.userId;
+                url = "/role/" + data.roleId;
                 this.sumbitType = 'put';
             }
             $.ajax({
@@ -139,8 +140,8 @@ var userObj = {
                     if(data.status === 0){
                         //成功后的处理
                         toastr.success(data.msg);
-                        userObj.doSearch();
-                        $("#addUserDialog").modal("hide");
+                        roleObj.doSearch();
+                        $("#addRoleDialog").modal("hide");
                     }else{
                         //失败后的处理
                         toastr.warning(data.msg);
@@ -151,32 +152,32 @@ var userObj = {
     },
     validate:function () {
         var data = this.getUpdateData();
-        if(!data.userName){
-            toastr.warning("用户名不能为空");
+        if(!data.roleName){
+            toastr.warning("角色名称不能为空");
             return false;
         }
-        if (!data.nickName){
-            toastr.warning("昵称不能为空");
+        if (!data.roleDesc){
+            toastr.warning("角色备注不能为空");
             return false;
         }
         return true;
     },
     getUpdateData:function(){
         var obj ={};
-        obj.userId = $("#userId").val();
-        obj.userName = $("#userName").val();
-        obj.nickName = $("#nickName").val();
-        if(obj.userId){
+        obj.roleId = $("#roleId").val();
+        obj.roleName = $("#roleName").val();
+        obj.roleDesc = $("#roleDesc").val();
+        if(obj.roleId){
             obj._method = $("#_method").val();
         }
         return obj;
     },
     delete:function(){
-        var rows = $('#userTable').bootstrapTable('getSelections');
+        var rows = $('#roleTable').bootstrapTable('getSelections');
         if(rows && rows.length>0){
             var ids = [];
             rows.forEach(function (i) {
-                ids.push(i.userId);
+                ids.push(i.roleId);
             });
 
             Ewin.confirm({ message: "确认要删除选择的数据吗？" }).on(function (e) {
@@ -184,17 +185,17 @@ var userObj = {
                     return;
                 }
                 $.ajax({
-                    url: '/user/deleteBatch',
+                    url: '/role/deleteBatch',
                     type: 'post',
                     data: {
-                        userIds: ids.join(",")
+                        roleIds: ids.join(",")
                     },
                     dataType: 'json',
                     success: function (data) {
                         if (data.status === 0) {
                             //成功后的处理
                             toastr.success(data.msg);
-                            userObj.doSearch();
+                            roleObj.doSearch();
                         } else {
                             //失败后的处理
                             toastr.warning(data.msg);
@@ -203,20 +204,20 @@ var userObj = {
                 });
             });
         }else{
-            toastr.warning("请选择一条需要修改的数据");
+            toastr.warning("请选择至少一条需要删除的数据");
         }
     },
     edit:function(){
-        var rows = $('#userTable').bootstrapTable('getSelections');
+        var rows = $('#roleTable').bootstrapTable('getSelections');
         if(rows && rows.length===1){
             console.log(rows[0]);
-            this.editRow(rows[0].userId);
+            this.editRow(rows[0].roleId);
         }else{
             toastr.warning("请选择一条需要修改的数据");
         }
     },
     setForm:function (jsonValue) {
-        var obj = $("#addUserForm");
+        var obj = $("#addRoleForm");
         $.each(jsonValue, function (name, ival) {
             var $obj = obj.find("input[name=" + name + "]");
             if ($obj.attr("type") === "checkbox") {
@@ -256,7 +257,7 @@ var userObj = {
                 return;
             }
             $.ajax({
-                url: '/user/' + id,
+                url: '/role/' + id,
                 type: 'delete',
                 dataType: 'json',
                 contentType: "application/json;charset=UTF-8",
@@ -264,7 +265,7 @@ var userObj = {
                     if (data.status === 0) {
                         //成功后的处理
                         toastr.success(data.msg);
-                        userObj.doSearch();
+                        roleObj.doSearch();
                     } else {
                         //失败后的处理
                         toastr.warning(data.msg);
@@ -274,11 +275,11 @@ var userObj = {
         });
     },
     editRow:function(id){
-        var row = $('#userTable').bootstrapTable('getRowByUniqueId',id);
+        var row = $('#roleTable').bootstrapTable('getRowByUniqueId',id);
         console.log(row);
         this.setForm(row);
-        $("#userModalLabel").html("修改用户");
-        $("#addUserDialog").modal("show");
+        $("#roleModalLabel").html("修改用户");
+        $("#addRoleDialog").modal("show");
         var $hiddenMethod = $("#hiddenMethod");
         $hiddenMethod.empty();
         $hiddenMethod.html('<input id="_method" name="_method" type="hidden" value="put" />');
@@ -296,8 +297,7 @@ function enableForm(){
     $(".submit-btn").show();
 }
 $(function () {
-    userObj.init();
-    //userObj.initSaveOrUpdate();
+    roleObj.init();
     toastr.options = {
         "closeButton": true,
         "debug": false,
@@ -317,7 +317,7 @@ $(function () {
 });
 function operateFormatter(value, row, index) {//赋予的参数
     return [
-        '<a href="javascript:void(0);" class="btn btn-warning btn-xs" onclick="userObj.editRow('+row.userId+')"><i class="icon-pencil icon-large"></i>修改</a>&nbsp;',
-        '<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="userObj.deleteRow('+row.userId+')"><i class="icon-trash icon-large"></i>删除</a>&nbsp;'
+        '<a href="javascript:void(0);" class="btn btn-warning btn-xs" onclick="roleObj.editRow('+row.roleId+')"><i class="icon-pencil icon-large"></i>修改</a>&nbsp;',
+        '<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="roleObj.deleteRow('+row.roleId+')"><i class="icon-trash icon-large"></i>删除</a>&nbsp;'
     ].join('');
 }

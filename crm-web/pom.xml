@@ -107,6 +107,24 @@
             <groupId>org.webjars</groupId>
             <artifactId>font-awesome</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>jquery.treegrid</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.webjars.bower</groupId>
+                    <artifactId>jquery</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>bootstrap-treeview</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>github-com-tui2tone-flat-admin-bootstrap-templates</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <finalName>crm-web</finalName>
@@ -114,6 +132,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.5.8.RELEASE</version>
                 <configuration>
                     <fork>true</fork>
                 </configuration>

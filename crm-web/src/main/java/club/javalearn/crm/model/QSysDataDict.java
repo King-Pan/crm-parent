@@ -14,6 +14,8 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
 /**
  * QSysDataDict is a Querydsl query type for SysDataDict
+ * @author king-pan
+ * @date 2018-01-16
  */
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QSysDataDict extends EntityPathBase<SysDataDict> {

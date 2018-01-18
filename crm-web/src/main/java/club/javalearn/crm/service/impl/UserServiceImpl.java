@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
             if(userRepository.getByUserName(user.getUserName())!=null){
                 throw new RuntimeException("用户名已存在");
             } else{
-                user.setStatus(Constant.USER_DEFAULT_STATUS);
+                user.setStatus(Constant.DEFAULT_STATUS);
                 user.setCreateDate(new Date());
                 user.setUpdateDate(new Date());
                 user.setSalt(SaltGenerator.createSalt());
@@ -125,6 +125,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteByStatus(userIds);
     }
 
+    @Transactional(rollbackOn = RuntimeException.class)
     @Override
     public void deleteBatchByStatus(String userIds) {
         List<Long> userList = new ArrayList<>();
@@ -150,7 +151,7 @@ public class UserServiceImpl implements UserService {
                     if(keys[0].endsWith("nickName") && StringUtils.isNoneBlank(keys[1])){
                         user.setNickName(keys[1].trim());
                     }
-                    if(keys[0].endsWith("status") && StringUtils.isNoneBlank(keys[1]) && !"-1".endsWith(keys[1])){
+                    if(keys[0].endsWith("status") && StringUtils.isNoneBlank(keys[1]) && !"-1".equals(keys[1])){
                         user.setStatus(keys[1].trim());
                     }
                 }

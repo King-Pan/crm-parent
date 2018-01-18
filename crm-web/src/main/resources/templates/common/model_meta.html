@@ -1,0 +1,57 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="modelHeader(title)">
+    <meta charset="UTF-8"/>
+    <title>${title}</title>
+    <link rel="stylesheet" href="/webjars/bootstrap-table/1.9.1-1/bootstrap-table.css"
+          th:href="@{/webjars/bootstrap-table/1.9.1-1/bootstrap-table.css}"/>
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="/webjars/font-awesome/4.7.0/css/font-awesome.min.css" th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" href="/webjars/select2/4.0.3/css/select2.min.css"
+          th:href="@{/webjars/select2/4.0.3/css/select2.min.css}">
+    <link rel="stylesheet" href="/webjars/toastr/2.1.2/build/toastr.css"
+          th:href="@{/webjars/toastr/2.1.2/build/toastr.css}">
+    <link rel="stylesheet" href="/webjars/bootstrap-treeview/1.2.0/dist/bootstrap-treeview.min.css"
+          th:href="@{/webjars/bootstrap-treeview/1.2.0/dist/bootstrap-treeview.min.css}">
+    <link rel="stylesheet" href="../../static/css/bootstrap-combined.min.css" th:href="@{/css/bootstrap-combined.min.css}" />
+    <style>
+        .search-header {
+            margin-top: 5px;
+        }
+
+        .form-label-item {
+            min-width: 100px;
+            margin-left: 10px;
+        }
+
+        .form-control-select {
+            width: 172px;
+        }
+
+        div.form-group {
+            margin-top: 10px;
+        }
+
+        .qry-btn {
+            padding: 5px 8px;
+            border: 1px solid #46b8da;
+            border-radius: 3px;
+            color: #46b8da;
+        }
+
+        a {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        .qry-btn:hover {
+            color: #fff;
+            background-color: #5bc0de;
+        }
+    </style>
+</head>
+
