@@ -308,7 +308,7 @@ function enableForm(){
     $(".submit-btn").show();
 }
 $(function () {
-    resourceObj.init();
+    //resourceObj.init();
     toastr.options = {
         "closeButton": true,
         "debug": false,
@@ -325,15 +325,6 @@ $(function () {
         "showMethod": "fadeIn",
         "hideMethod": "fadeOut"
     };
-    $('#tree').treeview({
-        data: tree,         // data is not optional
-        icon: "tree",
-        selectedIcon: "chevron-right",
-        emptyIcon: 'fire',    //没有子节点的节点图标
-        color: "#000000",
-        levels: 5,
-        backColor: '#FFFFFF'
-    });
 });
 function operateFormatter(value, row, index) {//赋予的参数
     return [
@@ -342,36 +333,47 @@ function operateFormatter(value, row, index) {//赋予的参数
     ].join('');
 }
 
-var tree = [
-    {
-        text: "Parent 1",
-        nodes: [
-            {
-                text: "Child 1",
-                nodes: [
-                    {
-                        text: "Grandchild 1"
-                    },
-                    {
-                        text: "Grandchild 2"
-                    }
-                ]
-            },
-            {
-                text: "Child 2"
-            }
-        ]
-    },
-    {
-        text: "Parent 2"
-    },
-    {
-        text: "Parent 3"
-    },
-    {
-        text: "Parent 4"
-    },
-    {
-        text: "Parent 5"
-    }
-];
+var Menu = {
+    id: "resourceTable",
+    table: null,
+    layerIndex: -1
+};
+/**
+ * 初始化表格的列
+ */
+Menu.initColumn = function () {
+    var columns = [
+        {field: 'selectItem', radio: true},
+        {title: '资源ID', field: 'resourceId', visible: false, align: 'center', valign: 'middle', width: '80px'},
+        {title: '资源名称', field: 'resourceName', align: 'center', valign: 'middle', sortable: true, width: '180px'},
+        {title: '上级资源', field: 'parentName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
+        {title: '图标', field: 'icon', align: 'center', valign: 'middle', sortable: true, width: '80px', formatter: function(item, index){
+                return item.icon == null ? '' : '<i class="'+item.icon+' fa-lg"></i>';
+            }},
+        {title: '类型', field: 'resourceType', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
+                if(item.type === 0){
+                    return '<span class="label label-primary">目录</span>';
+                }
+                if(item.type === 1){
+                    return '<span class="label label-success">菜单</span>';
+                }
+                if(item.type === 2){
+                    return '<span class="label label-warning">按钮</span>';
+                }
+            }},
+        {title: '排序号', field: 'resourceOrder', align: 'center', valign: 'middle', sortable: true, width: '100px'},
+        {title: '菜单URL', field: 'url', align: 'center', valign: 'middle', sortable: true, width: '160px'},
+        {title: '授权标识', field: 'expression', align: 'center', valign: 'middle', sortable: true}]
+    return columns;
+};
+
+$(function () {
+    var table = new TreeTable(Menu.id,  "http://localhost:8080/resource", Menu.initColumn());
+    table.setExpandColumn(2);
+    table.setIdField("resourceId");
+    table.setCodeField("resourceId");
+    table.setParentCodeField("parentId");
+    table.setExpandAll(false);
+    table.init();
+    Menu.table = table;
+});

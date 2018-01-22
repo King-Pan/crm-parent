@@ -12,7 +12,7 @@
                 <div id="tree"></div>
             </div>
             <div class="span9">
-                <div class="panel " style="margin-bottom:0px; border: solid 1px #eee;">
+                <div class="panel" style="margin-bottom:0px; border: solid 1px #eee;">
                     <div class="panel-heading" style="font-weight: bold; background-color: #f5fafe; border-bottom: solid 1px #eee;">
                         查询条件
                         <span style="float:right;">
@@ -50,7 +50,14 @@
                             <a href="javascript:void(0);" class="btn btn-danger" onclick="resourceObj.delete();"><i
                                     class="icon-trash icon-large"></i>删除</a>
                         </div>
-                        <table id="resourceTable" class="table-striped table-hover" data-mobile-responsive="true">
+                        <!--<table id="resourceTable" class="table-striped table-hover" data-mobile-responsive="true">-->
+                        <!--</table>-->
+                        <table id="resourceTable" data-mobile-responsive="true" data-click-to-select="true">
+                            <thead>
+                            <tr>
+                                <th data-field="selectItem" data-checkbox="true"></th>
+                            </tr>
+                            </thead>
                         </table>
                     </div>
                 </div>

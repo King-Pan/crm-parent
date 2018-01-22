@@ -33,9 +33,10 @@ public class Resource {
     private Long resourceId;
 
     /**
-     * 模块名称
+     * 资源名称
      */
-    private String modelName;
+    @Column(unique = true)
+    private String resourceName;
 
     /**
      * 父类ID
@@ -43,15 +44,29 @@ public class Resource {
     private String parentId;
 
     /**
-     * 树的层级
+     * 上级资源名称
      */
-    private String level;
+    private String parentName;
 
     /**
-     * 资源名称
+     * url
      */
-    @Column(unique = true)
-    private String resourceName;
+    private String url;
+
+    /**
+     * 图标
+     */
+    private String icon;
+
+    /**
+     * 资源类型
+     */
+    private String resourceType;
+
+    /**
+     * 排序
+     */
+    private Integer resourceOrder;
 
     /**
      * 资源表达式
