@@ -14,9 +14,10 @@ import java.util.List;
 public interface ResourceService {
     /**
      * 查询所有资源信息
+     * @param param 查询参数
      * @return List
      */
-    List<Resource> getList();
+    List<Resource> getList(String param);
 
     /**
      * 修改资源

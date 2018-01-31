@@ -43,7 +43,8 @@ public class ResourceController {
     @GetMapping
     @ApiOperation(value = "资源查询服务")
     public List<Resource> query() {
-        return resourceService.getList();
+        String a = "";
+        return resourceService.getList(a);
     }
 
     @PutMapping("/{resourceId:\\d+}")
