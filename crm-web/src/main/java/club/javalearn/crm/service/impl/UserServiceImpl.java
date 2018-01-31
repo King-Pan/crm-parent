@@ -107,7 +107,6 @@ public class UserServiceImpl implements UserService {
             } else{
                 user.setStatus(Constant.DEFAULT_STATUS);
                 user.setCreateDate(new Date());
-                user.setUpdateDate(new Date());
                 user.setSalt(SaltGenerator.createSalt());
                 user.setPassword(passwordEncoder.encode(user.getSalt()+securityProperties.getBrowser().getDefaultPassword()));
                 return userRepository.save(user);

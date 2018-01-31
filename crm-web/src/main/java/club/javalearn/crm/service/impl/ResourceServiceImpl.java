@@ -1,11 +1,17 @@
 package club.javalearn.crm.service.impl;
 
 import club.javalearn.crm.model.Resource;
+import club.javalearn.crm.model.Role;
 import club.javalearn.crm.repository.ResourceRepository;
 import club.javalearn.crm.service.ResourceService;
+import club.javalearn.crm.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,21 +28,26 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public List<Resource> getList() {
-        return resourceRepository.findAll();
+        Sort sort = new Sort(Sort.Direction.ASC, "resourceOrder");
+        return resourceRepository.findAll(sort);
     }
 
+    @Transactional(rollbackOn = RuntimeException.class)
+    @Modifying
     @Override
     public void update(Resource resource) {
-        /*
-         * select * from sys_resource t where t.parent_id is null;
-
-         select * from sys_resource t where t.parent_id = 1;
-         */
+        Resource oldResoure = resourceRepository.findOne(resource.getResourceId());
+        resource.setCreateDate(oldResoure.getCreateDate());
+        resource.setStatus(oldResoure.getStatus());
+        resource.setUpdateDate(new Date());
+        resourceRepository.save(resource);
     }
 
     @Override
     public Resource create(Resource resource) {
-        return null;
+        resource.setCreateDate(new Date());
+        resource.setStatus(Constant.DEFAULT_STATUS);
+        return resourceRepository.save(resource);
     }
 
     @Override
@@ -47,5 +58,10 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void deleteBatchByStatus(String resourceds) {
 
+    }
+
+    @Override
+    public Resource selectOne(String resourceId) {
+        return resourceRepository.findOne(Long.parseLong(resourceId));
     }
 }

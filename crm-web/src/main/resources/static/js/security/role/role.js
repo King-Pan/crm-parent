@@ -129,6 +129,8 @@ var roleObj = {
             if(data && data._method==='put'){
                 url = "/role/" + data.roleId;
                 this.sumbitType = 'put';
+            }else{
+                this.sumbitType = 'post';
             }
             $.ajax({
                 url: url,

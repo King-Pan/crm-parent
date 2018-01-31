@@ -173,6 +173,7 @@ var utils={
 };
 (function ($) {
 
+
     window.Ewin = function () {
         var html = '<div id="[Id]" class="modal fade" role="dialog" aria-labelledby="modalLabel">' +
             '<div class="modal-dialog modal-sm">' +
@@ -325,3 +326,7 @@ var utils={
     }();
 })(jQuery);
 
+var baseUrl = $("#baseUrl").val();
+
+    //http://localhost:8080/";
+    //document.location.pathname.substr(1,document.location.pathname.substr(1).indexOf("/")+1);

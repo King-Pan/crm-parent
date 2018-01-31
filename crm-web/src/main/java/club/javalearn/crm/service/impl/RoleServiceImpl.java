@@ -89,7 +89,6 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Role create(Role role) {
         role.setCreateDate(new Date());
-        role.setUpdateDate(new Date());
         role.setStatus(Constant.DEFAULT_STATUS);
         return roleRepository.save(role);
     }

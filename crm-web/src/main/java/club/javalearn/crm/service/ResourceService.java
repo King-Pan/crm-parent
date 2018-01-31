@@ -43,4 +43,11 @@ public interface ResourceService {
      * @param resourceds 资源ID
      */
     void deleteBatchByStatus(String resourceds);
+
+    /**
+     * 通过资源ID查找资源
+     * @param resourceId
+     * @return
+     */
+    Resource selectOne(String resourceId);
 }

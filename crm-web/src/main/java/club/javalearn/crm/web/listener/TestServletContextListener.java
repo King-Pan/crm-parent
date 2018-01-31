@@ -16,6 +16,7 @@ public class TestServletContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         System.out.println("ServletContext初始化");
         System.out.println(sce.getServletContext().getServerInfo());
+        System.out.println(sce.getServletContext());
     }
 
     @Override

@@ -125,6 +125,10 @@
             <groupId>org.webjars.bower</groupId>
             <artifactId>github-com-tui2tone-flat-admin-bootstrap-templates</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>github-com-vuejs-vue</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <finalName>crm-web</finalName>

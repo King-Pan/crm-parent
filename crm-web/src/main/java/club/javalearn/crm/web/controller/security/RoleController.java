@@ -56,7 +56,7 @@ public class RoleController {
         }
         if(log.isDebugEnabled()){
             log.debug("修改角色ID为{}.", role.getRoleId());
-            log.debug("修改角色户为:{}", role);
+            log.debug("修改角色为:{}", role);
         }
         return response;
     }

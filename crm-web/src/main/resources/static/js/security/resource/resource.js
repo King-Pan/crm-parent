@@ -6,110 +6,6 @@ var resourceObj = {
             width:172,
             height:34
         });
-        $('#resourceTable').bootstrapTable({
-            url: '/resource',         //请求后台的URL（*）
-            method: 'get',                      //请求方式（*）
-            toolbar: '#toolbar',                //工具按钮用哪个容器
-            striped: true,                      //是否显示行间隔色
-            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-            sidePagination: 'client',
-            pagination: false,
-            treeView: true,
-            treeId: "resourceId",
-            treeField: "resourceName",
-            treeRootLevel: 1,
-            search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
-            contentType: "application/x-www-form-urlencoded",
-            strictSearch: true,
-            showColumns: true,                  //是否显示所有的列
-            showRefresh: false,                  //是否显示刷新按钮
-            minimumCountColumns: 2,             //最少允许的列数
-            clickToSelect: false,                //是否启用点击选中行
-            height: 580,                       //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-            uniqueId: "resourceId",                     //每一行的唯一标识，一般为主键列
-            showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
-            cardView: false,                    //是否显示详细视图
-            detailView: false,                   //是否显示父子表
-            columns: [
-                {
-                    field:'checkbox',
-                    checkbox : true,
-                    align: 'center'
-                },
-                {
-                    field: 'resourceId',
-                    title: '资源ID',
-                    align: 'center',
-                    visible: false
-                }, {
-                    field: 'resourceName',
-                    title: '角色名称',
-                    align: 'center'
-                }, {
-                    field: 'resourceDesc',
-                    title: '角色备注',
-                    align: 'center'
-                }, {
-                    field: 'expression',
-                    title: '资源表达式',
-                    align: 'center'
-                }, {
-                    field: 'modelName',
-                    title: '模块名称',
-                    align: 'center'
-                }, {
-                    field: 'level',
-                    title: '层级',
-                    align: 'center',
-                    visible: false
-                },{
-                    field: 'status',
-                    title: '状态',
-                    align: 'center',
-                    formatter: function (data) {
-                        var status;
-                        if(data){
-                            if(data === '0'){
-                                status = '未启用';
-                            }else if(data === '1'){
-                                status = '启用';
-                            }else if(data === '2'){
-                                status = '锁定';
-                            }else if(data === '3'){
-                                status = '删除';
-                            }else{
-                                status = '未知状态';
-                            }
-                        }
-                        return status;
-                    }
-                },{
-                    field: 'createDate',
-                    title: '创建时间',
-                    align: 'center'
-                },{
-                    field: 'updateDate',
-                    title: '更新时间',
-                    align: 'center'
-                },
-                {
-                    field: 'operate',
-                    title: '操作',
-                    align: 'center',
-                    formatter: operateFormatter //自定义方法，添加操作按钮
-                }
-            ],
-            rowStyle: function (row, index) {
-                var classesArr = ['success', 'info'];
-                var strclass = "";
-                if (index % 2 === 0) {//偶数行
-                    strclass = classesArr[0];
-                } else {//奇数行
-                    strclass = classesArr[1];
-                }
-                return { classes: strclass };
-            }//隔行变色
-        });
     },
     //获取查询参数
     queryParams:function (params) {
@@ -120,6 +16,16 @@ var resourceObj = {
             param: decodeURIComponent(params)
         };
         return temp;
+    },
+    getMenuTree:function () {
+        //加载菜单树
+        $.get("resource/tree", function(r){
+            ztree = $.fn.zTree.init($("#menuTree"), setting, r.menuList);
+            var node = ztree.getNodeByParam("menuId", vm.menu.parentId);
+            ztree.selectNode(node);
+
+            vm.menu.parentName = node.name;
+        })
     },
     //查询按钮
     doSearch:function () {
@@ -140,6 +46,8 @@ var resourceObj = {
             if(data && data._method==='put'){
                 url = "/resource/" + data.roleId;
                 this.sumbitType = 'put';
+            }else{
+                this.sumbitType = 'post';
             }
             $.ajax({
                 url: url,
@@ -296,19 +204,199 @@ var resourceObj = {
         $hiddenMethod.html('<input id="_method" name="_method" type="hidden" value="put" />');
     }
 };
-//设置表单不可编辑
-function disableForm(){
-    $(".add-form-rule :input").attr("disabled","disabled");
-    $(".submit-btn").hide();
-}
-
 //设置表单可编辑
 function enableForm(){
     $(".add-form-rule :input").removeAttr("disabled");
     $(".submit-btn").show();
 }
+
+
+var Menu = {
+    id: "resourceTable",
+    table: null,
+    layerIndex: -1
+};
+/**
+ * 初始化表格的列
+ */
+Menu.initColumn = function () {
+    var columns = [
+        {field: 'selectItem', radio: true},
+        {title: '资源ID', field: 'resourceId', visible: false, align: 'center', valign: 'middle', width: '80px'},
+        {title: '资源名称', field: 'resourceName', align: 'center', valign: 'middle', sortable: true, width: '180px'},
+        {title: '上级资源', field: 'parentName', align: 'center', valign: 'middle', sortable: true, width: '100px',formatter:function (item, index) {
+                if(!item.parentName){
+                    return "-";
+                }
+                return item.parentName;
+            }},
+        {title: '图标', field: 'icon', align: 'center', valign: 'middle', sortable: true, width: '80px', formatter: function(item, index){
+                return item.icon == null ? '' : '<i class="'+item.icon+' fa-lg"></i>';
+            }},
+        {title: '类型', field: 'resourceType', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
+                if(item.resourceType === "0"){
+                    return '<span class="label label-primary" style="line-height: 19px;margin-left:22px;">目录</span>';
+                }
+                if(item.resourceType === "1"){
+                    return '<span class="label label-success" style="line-height: 19px;margin-left:22px;">菜单</span>';
+                }
+                if(item.resourceType === "2"){
+                    return '<span class="label label-warning" style="line-height: 19px;margin-left:22px;">按钮</span>';
+                }
+            }},
+        {title: '排序号', field: 'resourceOrder', align: 'center', valign: 'middle', sortable: true, width: '100px'},
+        {title: '菜单URL', field: 'url', align: 'center', valign: 'middle', sortable: true, width: '160px',formatter:function (item,index) {
+                if(!item.url){
+                    return "-";
+                }
+                return item.url;
+            }},
+        {title: '授权标识', field: 'expression', align: 'center', valign: 'middle', sortable: true,formatter:function (item,index) {
+                if(!item.expression){
+                    return "-";
+                }
+                return item.expression;
+            }}];
+    return columns;
+};
+
+var ztree;
+
+var setting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "resourceId",
+            pIdKey: "parentId",
+            rootPId: -1
+        },
+        key: {
+            name: "resourceName",
+            url: "nourl"
+        }
+    }
+};
+
+var vm = new Vue({
+    // 选项
+    el:'#resourceVm',
+    data:{
+        showList: true,
+        title: null,
+        menu:{
+            parentName:null,
+            parentId:1,
+            resourceType:1,
+            orderNum:0
+        }
+    },
+    methods:{
+        getMenu: function(menuId){
+            //加载菜单树
+            $.get("select", function(r){
+                ztree = $.fn.zTree.init($("#menuTree"), setting, r.data);
+                var node = ztree.getNodeByParam("resourceId", vm.menu.parentId);
+                ztree.selectNode(node);
+                vm.menu.parentName = node.resourceName;
+            })
+        },
+        add: function(){
+            vm.title = "新增";
+            vm.menu = {parentName:null,parentId:1,resourceType:1,orderNum:0};
+            vm.getMenu();
+            $("#resourceModalLabel").html("新增资源");
+            $("#addResourceForm")[0].reset();
+            $("#resourceId").val('');
+            $("#hiddenMethod").empty();
+            $("#addResourceDialog").modal("show");
+        },
+        update: function () {
+            var resourceId = getResourceId();
+            if(resourceId == null){
+                return ;
+            }
+
+            $.get(baseUrl+"resource/"+resourceId, function(r){
+                vm.showList = false;
+                vm.title = "修改";
+                vm.menu = r.data;
+                vm.getMenu();
+                $("#resourceModalLabel").html("修改资源");
+                $("#addResourceForm")[0].reset();
+                $("#resourceId").val('');
+                $("#hiddenMethod").empty();
+                $("#addResourceDialog").modal("show");
+            });
+        },
+        saveOrUpdate:function () {
+            if(vm.validator()){
+                return ;
+            }
+
+            var url = vm.menu.resourceId == null ? "sys/menu/save" : "sys/menu/update";
+            $.ajax({
+                type: "POST",
+                url:  baseUrl + "resource/",
+                contentType: "application/json",
+                data: JSON.stringify(vm.menu),
+                success: function(r){
+                    if(r.code === 0){
+                        alert('操作成功', function(){
+                            vm.reload();
+                        });
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
+        resourceTree: function(){
+            layer.open({
+                type: 1,
+                offset: '50px',
+                skin: 'layui-layer-molv',
+                title: "选择菜单",
+                area: ['300px', '450px'],
+                shade: 0,
+                shadeClose: false,
+                content: jQuery("#menuLayer"),
+                btn: ['确定', '取消'],
+                btn1: function (index) {
+                    var node = ztree.getSelectedNodes();
+                    //选择上级菜单
+                    vm.menu.parentId = node[0].resourceId;
+                    vm.menu.parentName = node[0].resourceName;
+
+                    layer.close(index);
+                }
+            });
+        },
+        validator:function () {
+            return true;
+        }
+    }
+});
+
+function getResourceId () {
+    var selected = $('#resourceTable').bootstrapTreeTable('getSelections');
+    if (selected.length === 0) {
+        alert("请选择一条记录");
+        return false;
+    } else {
+        return selected[0].id;
+    }
+}
+
 $(function () {
-    //resourceObj.init();
+    var table = new TreeTable(Menu.id,  baseUrl + "resource", Menu.initColumn());
+    table.setExpandColumn(2);
+    table.setIdField("resourceId");
+    table.setCodeField("resourceId");
+    table.setParentCodeField("parentId");
+    table.setExpandAll(false);
+    table.init();
+    Menu.table = table;
+    resourceObj.init();
     toastr.options = {
         "closeButton": true,
         "debug": false,
@@ -325,55 +413,4 @@ $(function () {
         "showMethod": "fadeIn",
         "hideMethod": "fadeOut"
     };
-});
-function operateFormatter(value, row, index) {//赋予的参数
-    return [
-        '<a href="javascript:void(0);" class="btn btn-warning btn-xs" onclick="resourceObj.editRow('+row.resourceId+')"><i class="icon-pencil icon-large"></i>修改</a>&nbsp;',
-        '<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="resourceObj.deleteRow('+row.resourceId+')"><i class="icon-trash icon-large"></i>删除</a>&nbsp;'
-    ].join('');
-}
-
-var Menu = {
-    id: "resourceTable",
-    table: null,
-    layerIndex: -1
-};
-/**
- * 初始化表格的列
- */
-Menu.initColumn = function () {
-    var columns = [
-        {field: 'selectItem', radio: true},
-        {title: '资源ID', field: 'resourceId', visible: false, align: 'center', valign: 'middle', width: '80px'},
-        {title: '资源名称', field: 'resourceName', align: 'center', valign: 'middle', sortable: true, width: '180px'},
-        {title: '上级资源', field: 'parentName', align: 'center', valign: 'middle', sortable: true, width: '100px'},
-        {title: '图标', field: 'icon', align: 'center', valign: 'middle', sortable: true, width: '80px', formatter: function(item, index){
-                return item.icon == null ? '' : '<i class="'+item.icon+' fa-lg"></i>';
-            }},
-        {title: '类型', field: 'resourceType', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
-                if(item.type === 0){
-                    return '<span class="label label-primary">目录</span>';
-                }
-                if(item.type === 1){
-                    return '<span class="label label-success">菜单</span>';
-                }
-                if(item.type === 2){
-                    return '<span class="label label-warning">按钮</span>';
-                }
-            }},
-        {title: '排序号', field: 'resourceOrder', align: 'center', valign: 'middle', sortable: true, width: '100px'},
-        {title: '菜单URL', field: 'url', align: 'center', valign: 'middle', sortable: true, width: '160px'},
-        {title: '授权标识', field: 'expression', align: 'center', valign: 'middle', sortable: true}]
-    return columns;
-};
-
-$(function () {
-    var table = new TreeTable(Menu.id,  "http://localhost:8080/resource", Menu.initColumn());
-    table.setExpandColumn(2);
-    table.setIdField("resourceId");
-    table.setCodeField("resourceId");
-    table.setParentCodeField("parentId");
-    table.setExpandAll(false);
-    table.init();
-    Menu.table = table;
 });

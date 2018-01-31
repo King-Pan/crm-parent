@@ -129,6 +129,8 @@ var userObj = {
             if(data && data._method==='put'){
                 url = "/user/" + data.userId;
                 this.sumbitType = 'put';
+            }else{
+                this.sumbitType = 'post';
             }
             $.ajax({
                 url: url,
