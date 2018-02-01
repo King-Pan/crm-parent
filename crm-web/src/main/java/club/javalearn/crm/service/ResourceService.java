@@ -12,12 +12,20 @@ import java.util.List;
  * @date 2018-01-18
  **/
 public interface ResourceService {
+
     /**
      * 查询所有资源信息
-     * @param param 查询参数
      * @return List
      */
-    List<Resource> getList(String param);
+    List<Resource> getList();
+
+    /**
+     * 筛选资源信息
+     * @param resourceName 资源名称
+     * @param status状态
+     * @return List
+     */
+    List<Resource> getList(String resourceName,String status);
 
     /**
      * 修改资源
@@ -38,12 +46,6 @@ public interface ResourceService {
      * @param resourceId 资源ID
      */
     void deleteByStatus(Long resourceId);
-
-    /**
-     * 批量状态删除资源
-     * @param resourceds 资源ID
-     */
-    void deleteBatchByStatus(String resourceds);
 
     /**
      * 通过资源ID查找资源

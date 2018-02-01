@@ -350,6 +350,15 @@ var vm = new Vue({
                 }
             });
         },
+        refresh:function () {
+            var param = {
+                query:{
+                    resourceName: this.$refs.resourceName.value,
+                    status: this.$refs.status.value==='-1'?'':this.$refs.status.value
+                }
+            };
+            Menu.table.refresh(param);
+        },
         resourceTree: function(){
             layer.open({
                 type: 1,

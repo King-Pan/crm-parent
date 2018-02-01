@@ -31,7 +31,12 @@ public class ResourceServiceImpl implements ResourceService {
     private ResourceRepository resourceRepository;
 
     @Override
-    public List<Resource> getList(final String param) {
+    public List<Resource> getList() {
+        return getList("",Constant.DEFAULT_STATUS);
+    }
+
+    @Override
+    public List<Resource> getList(final String resourceName,final String status) {
         Sort sort = new Sort(Sort.Direction.ASC, "resourceOrder");
         return resourceRepository.findAll(new Specification<Resource>(){
 
@@ -40,14 +45,11 @@ public class ResourceServiceImpl implements ResourceService {
                 Path<String> resourceNamePath = root.get("resourceName");
                 Path<String> statusPath = root.get("status");
                 List<Predicate> wherePredicate = new ArrayList<>();
-                final Resource resource = convertRole(param);
-                if (resource != null) {
-                    if (StringUtils.isNoneBlank(resource.getResourceName())) {
-                        wherePredicate.add(cb.like(resourceNamePath, "%" + resource.getResourceName() + "%"));
-                    }
-                    if (StringUtils.isNoneBlank(resource.getStatus())) {
-                        wherePredicate.add(cb.equal(statusPath, resource.getStatus()));
-                    }
+                if (StringUtils.isNoneBlank(resourceName)) {
+                    wherePredicate.add(cb.like(resourceNamePath, "%" + resourceName + "%"));
+                }
+                if (StringUtils.isNoneBlank(status)) {
+                    wherePredicate.add(cb.equal(statusPath, status));
                 }
                 Predicate[] predicates = new Predicate[]{};
                 //这里可以设置任意条查询条件
@@ -59,25 +61,6 @@ public class ResourceServiceImpl implements ResourceService {
         },sort);
     }
 
-    private Resource convertRole(String param){
-        Resource resource = null;
-        if(StringUtils.isNoneBlank(param)){
-            String[] values = param.split("&");
-            resource = new Resource();
-            for (String value:values){
-                String[] keys = value.split("=");
-                if(keys.length==2){
-                    if(keys[0].endsWith("resourceName") && StringUtils.isNoneBlank(keys[1])){
-                        resource.setResourceName(keys[1].trim());
-                    }
-                    if(keys[0].endsWith("status") && StringUtils.isNoneBlank(keys[1]) && !"-1".equals(keys[1])){
-                        resource.setStatus(keys[1].trim());
-                    }
-                }
-            }
-        }
-        return resource;
-    }
     @Transactional(rollbackOn = RuntimeException.class)
     @Modifying
     @Override
@@ -101,11 +84,6 @@ public class ResourceServiceImpl implements ResourceService {
         Resource resource = resourceRepository.findOne(resourceId);
         resource.setStatus(Constant.DELETE_STATUS);
         resourceRepository.save(resource);
-    }
-
-    @Override
-    public void deleteBatchByStatus(String resourceds) {
-
     }
 
     @Override

@@ -15,7 +15,7 @@
                              style="font-weight: bold; background-color: #f5fafe; border-bottom: solid 1px #eee;">
                             查询条件
                             <span style="float:right;">
-                                <a class="qry-btn" onclick="resourceObj.doSearch()">
+                                <a class="qry-btn" v-on:click="refresh">
                                     <span class="glyphicon glyphicon-search"></span>查询
                                 </a>
 				            </span>
@@ -24,11 +24,11 @@
                             <form id="formSearch" class="form-inline" role="form">
                                 <div class="form-group">
                                     <label class="form-label form-label-item" for="resourceName">资源名称:</label>
-                                    <input type="text" name="resourceName" id="resourceName" class="form-control">
+                                    <input type="text"  ref="resourceName" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label form-label-item" for="status">资源状态:</label>
-                                    <select id="status" name="status" class="form-control form-control-select">
+                                    <select ref="status" class="form-control form-control-select">
                                         <option value="-1">全部</option>
                                         <option value="0">未启用</option>
                                         <option value="1" selected>启用</option>
