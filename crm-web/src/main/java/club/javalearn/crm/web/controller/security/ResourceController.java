@@ -71,14 +71,31 @@ public class ResourceController {
         ServerResponse response;
         try {
             resourceService.create(resource);
-            response = ServerResponse.createBySuccessMessage("角色资源成功");
+            response = ServerResponse.createBySuccessMessage("资源创建成功");
         }catch (Exception e){
-            log.error("角色修改失败",e);
-            response = ServerResponse.createByErrorMessage("角色资源失败:"+e.getMessage());
+            log.error("资源创建失败",e);
+            response = ServerResponse.createByErrorMessage("资源创建失败:"+e.getMessage());
         }
         if(log.isDebugEnabled()){
             log.debug("新增资源ID为{}.", resource.getResourceId());
             log.debug("新增资源为:{}", resource);
+        }
+        return response;
+    }
+
+    @DeleteMapping("/{resourceId:\\d+}")
+    @ApiOperation(value = "资源删除服务")
+    public ServerResponse delete(@PathVariable("resourceId")Long resourceId) {
+        ServerResponse response;
+        try {
+            resourceService.deleteByStatus(resourceId);
+            response = ServerResponse.createBySuccessMessage("资源删除成功");
+        }catch (Exception e){
+            log.error("资源删除失败",e);
+            response = ServerResponse.createByErrorMessage("资源删除失败:"+e.getMessage());
+        }
+        if(log.isDebugEnabled()){
+            log.debug("删除资源ID为{}.", resourceId);
         }
         return response;
     }

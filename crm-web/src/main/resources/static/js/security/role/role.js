@@ -59,15 +59,15 @@ var roleObj = {
                         var status;
                         if(data){
                             if(data === '0'){
-                                status = '未启用';
+                                status = '<span class="label label-info">未启用</span>';
                             }else if(data === '1'){
-                                status = '启用';
+                                status = '<span class="label label-success">启用</span>';
                             }else if(data === '2'){
-                                status = '锁定';
+                                status = '<span class="label label-warning">锁定</span>';
                             }else if(data === '3'){
-                                status = '删除';
+                                status = '<span class="label label-danger">删除</span>';
                             }else{
-                                status = '未知状态';
+                                status = '<span class="label label-inverse">未知状态</span>';
                             }
                         }
                         return status;
@@ -102,11 +102,11 @@ var roleObj = {
     },
     //获取查询参数
     queryParams:function (params) {
-        var params = $(".form-inline").serialize();
+        var param = $(".form-inline").serialize();
         var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
             size: params.limit,   //页面大小
             page: (params.offset / params.limit),
-            param: decodeURIComponent(params)
+            param: decodeURIComponent(param)
         };
         return temp;
     },

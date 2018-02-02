@@ -86,6 +86,11 @@
             <artifactId>crm-security</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <!--java程序执行ssh命令-->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap-table</artifactId>

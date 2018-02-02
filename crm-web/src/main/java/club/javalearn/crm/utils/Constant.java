@@ -13,8 +13,9 @@ public class Constant {
      */
     public static final String DEFAULT_STATUS = "1";
 
+
     /**
      * 数据删除的状态(删除)
      */
-    public static final String DELETE_STATUS = "2";
+    public static final String DELETE_STATUS = "3";
 }

@@ -115,7 +115,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private Role convertRole(String param) {
-        Role role = null;
+        Role role;
         if (StringUtils.isNoneBlank(param)) {
             String[] values = param.split("&");
             role = new Role();
@@ -130,6 +130,9 @@ public class RoleServiceImpl implements RoleService {
                     }
                 }
             }
+        }else{
+            role = new Role();
+            role.setStatus(Constant.DEFAULT_STATUS);
         }
         return role;
     }

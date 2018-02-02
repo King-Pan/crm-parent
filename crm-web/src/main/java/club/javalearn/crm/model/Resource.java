@@ -41,7 +41,7 @@ public class Resource {
     /**
      * 父类ID
      */
-    private String parentId;
+    private Long parentId;
 
     /**
      * 上级资源名称

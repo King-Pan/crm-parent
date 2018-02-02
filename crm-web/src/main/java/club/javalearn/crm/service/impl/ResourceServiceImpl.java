@@ -67,7 +67,6 @@ public class ResourceServiceImpl implements ResourceService {
     public void update(Resource resource) {
         Resource oldResource = resourceRepository.findOne(resource.getResourceId());
         resource.setCreateDate(oldResource.getCreateDate());
-        resource.setStatus(oldResource.getStatus());
         resource.setUpdateDate(new Date());
         resourceRepository.save(resource);
     }
@@ -81,6 +80,9 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public void deleteByStatus(Long resourceId) {
+        if(resourceRepository.hasChild(resourceId)>0){
+            throw new RuntimeException("该节点下有子节点，不能直接删除");
+        }
         Resource resource = resourceRepository.findOne(resourceId);
         resource.setStatus(Constant.DELETE_STATUS);
         resourceRepository.save(resource);

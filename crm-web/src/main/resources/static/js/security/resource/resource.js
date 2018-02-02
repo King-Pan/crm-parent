@@ -231,7 +231,7 @@ Menu.initColumn = function () {
                 return item.parentName;
             }},
         {title: '图标', field: 'icon', align: 'center', valign: 'middle', sortable: true, width: '80px', formatter: function(item, index){
-                return item.icon == null ? '' : '<i class="'+item.icon+' fa-lg"></i>';
+                return item.icon == null ? '' : '<span style="line-height: 19px;margin-left:22px;"><i class="'+item.icon+' fa-lg"></i></span>';
             }},
         {title: '类型', field: 'resourceType', align: 'center', valign: 'middle', sortable: true, width: '100px', formatter: function(item, index){
                 if(item.resourceType === "0"){
@@ -245,6 +245,26 @@ Menu.initColumn = function () {
                 }
             }},
         {title: '排序号', field: 'resourceOrder', align: 'center', valign: 'middle', sortable: true, width: '100px'},
+        {title: '状态', field: 'status', align: 'center', valign: 'middle', sortable: true, width: '100px',formatter:function (item) {
+                var data = item.status;
+                var status;
+                if(!data){
+                    status = "-";
+                }else{
+                    if(data === '0'){
+                        status = '<span class="label label-info">未启用</span>';
+                    }else if(data === '1'){
+                        status = '<span class="label label-success">启用</span>';
+                    }else if(data === '2'){
+                        status = '<span class="label label-warning">锁定</span>';
+                    }else if(data === '3'){
+                        status = '<span class="label label-danger">删除</span>';
+                    }else{
+                        status = '<span class="label label-inverse">未知状态</span>';
+                    }
+                }
+                return status;
+            }},
         {title: '菜单URL', field: 'url', align: 'center', valign: 'middle', sortable: true, width: '160px',formatter:function (item,index) {
                 if(!item.url){
                     return "-";
@@ -328,24 +348,70 @@ var vm = new Vue({
                 $("#addResourceDialog").modal("show");
             });
         },
+        del:function () {
+            var resourceId = getResourceId();
+            if(resourceId == null){
+                return ;
+            }
+            Ewin.confirm({ message: "确认要删除选择的数据吗？" }).on(function (e) {
+                if (!e) {
+                    return;
+                }
+                $.ajax({
+                    url: baseUrl+ '/resource/' + resourceId,
+                    type: 'delete',
+                    dataType: 'json',
+                    contentType: "application/json;charset=UTF-8",
+                    success: function (data) {
+                        if (data.status === 0) {
+                            //成功后的处理
+                            toastr.success(data.msg);
+                            vm.refresh();
+                        } else {
+                            //失败后的处理
+                            toastr.warning(data.msg);
+                        }
+                    }
+                });
+            });
+        },
         saveOrUpdate:function () {
             if(vm.validator()){
                 return ;
             }
-
-            var url = vm.menu.resourceId == null ? "sys/menu/save" : "sys/menu/update";
+            var url;
+            var method = 'post';
+            if(vm.menu.resourceId == null){
+                url = baseUrl +"resource";
+            }else{
+                url = baseUrl +"resource/"+ vm.menu.resourceId;
+                vm.menu._method = "put";
+                method = 'put';
+            }
+            var resource = {
+                resourceId: vm.menu.resourceId||'',
+                resourceType: vm.menu.resourceType||'',
+                resourceName: vm.menu.resourceName||'',
+                url: vm.menu.url||'',
+                icon: vm.menu.icon||'',
+                expression: vm.menu.expression||'',
+                parentName: vm.menu.parentName||'',
+                parentId: vm.menu.parentId||'',
+                resourceOrder: vm.menu.resourceOrder||'',
+                status: vm.menu.status||''
+            };
             $.ajax({
-                type: "POST",
-                url:  baseUrl + "resource/",
+                url:  url,
                 contentType: "application/json",
-                data: JSON.stringify(vm.menu),
-                success: function(r){
-                    if(r.code === 0){
-                        alert('操作成功', function(){
-                            vm.reload();
-                        });
+                type: method,
+                data: JSON.stringify(resource),
+                success: function(data){
+                    if(data.status === 0){
+                        toastr.success(data.msg);
+                        vm.refresh();
+                        $("#addResourceDialog").modal("hide");
                     }else{
-                        alert(r.msg);
+                        toastr.warning(data.msg);
                     }
                 }
             });
@@ -381,7 +447,16 @@ var vm = new Vue({
             });
         },
         validator:function () {
-            return true;
+            if(isBlank(vm.menu.resourceName)){
+                alert("资源名称不能为空");
+                return true;
+            }
+
+            //菜单
+            if(vm.menu.resourceType === 1 && isBlank(vm.menu.url)){
+                alert("菜单URL不能为空");
+                return true;
+            }
         }
     }
 });
