@@ -48,7 +48,7 @@ public interface UserRepository extends JpaRepository<User,Long>,JpaSpecificatio
      */
     @Modifying
     @Query(value = "update User u set u.status = 3  where u.userId in (:userIds) ")
-    void deleteByStatus(@Param("userId") List<Long> userIds);
+    void deleteByStatus(@Param("userIds") List<Long> userIds);
 
 
 }

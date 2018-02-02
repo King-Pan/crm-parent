@@ -45,6 +45,5 @@ public class DefaultAuthenticationSuccessHandler extends SavedRequestAwareAuthen
             super.onAuthenticationSuccess(request,response,authentication);
         }
 
-
     }
 }

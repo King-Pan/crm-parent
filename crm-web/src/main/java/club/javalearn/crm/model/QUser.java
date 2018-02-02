@@ -14,7 +14,7 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
 /**
  * @author king-pan
- * @date
+ * @date 2018-01-16
  */
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QUser extends EntityPathBase<User> {

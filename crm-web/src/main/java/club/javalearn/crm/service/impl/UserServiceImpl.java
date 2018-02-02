@@ -12,7 +12,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,6 +47,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Message<User> getList(final String param, Pageable pageable) {
         BootstrapMessage<User> message = new BootstrapMessage<>();
+        Sort sort = new Sort(Sort.Direction.DESC, "updateDate");
+        sort.and(new Sort(Sort.Direction.ASC,"status"));
+        sort.and(new Sort(Sort.Direction.ASC,"userId"));
+        Pageable pageableRequest = new PageRequest(pageable.getPageNumber(),pageable.getPageSize() , sort);
         Page<User> page = userRepository.findAll(new Specification<User>(){
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -73,7 +79,7 @@ public class UserServiceImpl implements UserService {
                 //这种方式使用JPA的API设置了查询条件，所以不需要再返回查询条件Predicate给Spring Data Jpa，故最后return null;即可。
                 return null;
             }
-        },pageable);
+        },pageableRequest);
 
         List<User> userList = new ArrayList<>();
         for(User user1:page.getContent()){
@@ -105,9 +111,8 @@ public class UserServiceImpl implements UserService {
             if(userRepository.getByUserName(user.getUserName())!=null){
                 throw new RuntimeException("用户名已存在");
             } else{
-                user.setStatus(Constant.USER_DEFAULT_STATUS);
+                user.setStatus(Constant.DEFAULT_STATUS);
                 user.setCreateDate(new Date());
-                user.setUpdateDate(new Date());
                 user.setSalt(SaltGenerator.createSalt());
                 user.setPassword(passwordEncoder.encode(user.getSalt()+securityProperties.getBrowser().getDefaultPassword()));
                 return userRepository.save(user);
@@ -125,6 +130,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteByStatus(userIds);
     }
 
+    @Transactional(rollbackOn = RuntimeException.class)
     @Override
     public void deleteBatchByStatus(String userIds) {
         List<Long> userList = new ArrayList<>();
@@ -137,7 +143,7 @@ public class UserServiceImpl implements UserService {
 
 
     private User convertUser(String param){
-        User user = null;
+        User user;
         if(StringUtils.isNoneBlank(param)){
             String[] values = param.split("&");
             user = new User();
@@ -150,11 +156,14 @@ public class UserServiceImpl implements UserService {
                     if(keys[0].endsWith("nickName") && StringUtils.isNoneBlank(keys[1])){
                         user.setNickName(keys[1].trim());
                     }
-                    if(keys[0].endsWith("status") && StringUtils.isNoneBlank(keys[1]) && !"-1".endsWith(keys[1])){
+                    if(keys[0].endsWith("status") && StringUtils.isNoneBlank(keys[1]) && !"-1".equals(keys[1])){
                         user.setStatus(keys[1].trim());
                     }
                 }
             }
+        }else{
+            user = new User();
+            user.setStatus(Constant.DEFAULT_STATUS);
         }
 
         return user;

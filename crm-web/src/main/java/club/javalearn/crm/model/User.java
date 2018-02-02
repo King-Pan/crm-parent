@@ -1,17 +1,16 @@
 package club.javalearn.crm.model;
 
 import club.javalearn.crm.config.serializer.DefaultDateJsonSerializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * crm-parent
@@ -21,7 +20,9 @@ import java.util.Date;
  **/
 @Entity
 @Table(name = "sys_user")
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"roles"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -31,45 +32,59 @@ public class User {
      */
     @Id
     @GeneratedValue
-    @JsonView(UserSimpleView.class)
     private Long userId;
     /**
      * 用户名称
      */
-    @JsonView(UserSimpleView.class)
+    @Column(unique = true)
     private String userName;
     /**
      * 用户昵称
      */
-    @JsonView(UserSimpleView.class)
     private String nickName;
     /**
      * 用户密码
      */
-    @JsonView(UserDetailView.class)
     private String password;
     /**
      * 加密盐
      */
-    @JsonView(UserDetailView.class)
     private String salt;
     /**
      * 用户状态
      */
-    @JsonView(UserSimpleView.class)
+    @Column(length = 1)
     private String status;
     /**
      * 创建时间
      */
-    @JsonView(UserSimpleView.class)
     @JsonSerialize(using = DefaultDateJsonSerializer.class)
     private Date createDate;
     /**
      * 最后更新时间
      */
-    @JsonView(UserSimpleView.class)
     @JsonSerialize(using = DefaultDateJsonSerializer.class)
     private Date updateDate;
+
+    @ManyToMany(mappedBy = "users")
+    @JsonIgnore
+    private Set<Role> roles = new HashSet<>();
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof User){
+            User user = (User)obj;
+            return user.getUserId().equals(this.getUserId());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getUserId().hashCode();
+    }
+
 
     public User(Long userId,String userName,String nickName,String status,Date createDate,Date updateDate){
         this.userId = userId;
@@ -79,9 +94,4 @@ public class User {
         this.createDate = createDate;
         this.updateDate = updateDate;
     }
-
-    public interface UserSimpleView{}
-
-    public interface UserDetailView extends UserSimpleView{}
-
 }

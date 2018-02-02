@@ -9,7 +9,13 @@ package club.javalearn.crm.utils;
 public class Constant {
 
     /**
-     * 用户默认的状态
+     * 数据默认的状态(启用)
      */
-    public static final String USER_DEFAULT_STATUS = "1";
+    public static final String DEFAULT_STATUS = "1";
+
+
+    /**
+     * 数据删除的状态(删除)
+     */
+    public static final String DELETE_STATUS = "3";
 }
