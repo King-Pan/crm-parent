@@ -7,10 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * crm-parent
@@ -66,9 +63,15 @@ public class User {
     @JsonSerialize(using = DefaultDateJsonSerializer.class)
     private Date updateDate;
 
-    @ManyToMany(mappedBy = "users")
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "sys_user_role",joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "userId")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "roleId")})
     @JsonIgnore
     private Set<Role> roles = new HashSet<>();
+
+    @Transient
+    private List<Long> roleIds = new ArrayList<>();
 
 
     @Override

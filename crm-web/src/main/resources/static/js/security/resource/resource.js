@@ -2,10 +2,7 @@ var resourceObj = {
     sumbitType: 'post',
     //初始化用户管理页面
     init:function () {
-        $("#status").select2({
-            width:172,
-            height:34
-        });
+
     },
     //获取查询参数
     queryParams:function (params) {
@@ -308,7 +305,8 @@ var vm = new Vue({
             parentId:1,
             resourceType:1,
             orderNum:0
-        }
+        },
+        bootstrapTable: null
     },
     methods:{
         getMenu: function(menuId){
@@ -316,8 +314,10 @@ var vm = new Vue({
             $.get("select", function(r){
                 ztree = $.fn.zTree.init($("#menuTree"), setting, r.data);
                 var node = ztree.getNodeByParam("resourceId", vm.menu.parentId);
-                ztree.selectNode(node);
-                vm.menu.parentName = node.resourceName;
+                if(node){
+                    ztree.selectNode(node);
+                    vm.menu.parentName = node.resourceName;
+                }
             })
         },
         add: function(){
@@ -329,6 +329,13 @@ var vm = new Vue({
             $("#resourceId").val('');
             $("#hiddenMethod").empty();
             $("#addResourceDialog").modal("show");
+            vm.initStatus();
+        },
+        initStatus:function () {
+            $("#m_status").select2({
+                height:34,
+                width:'100%'
+            });
         },
         update: function () {
             var resourceId = getResourceId();
@@ -346,6 +353,7 @@ var vm = new Vue({
                 $("#resourceId").val('');
                 $("#hiddenMethod").empty();
                 $("#addResourceDialog").modal("show");
+                vm.initStatus();
             });
         },
         del:function () {
@@ -420,7 +428,7 @@ var vm = new Vue({
             var param = {
                 query:{
                     resourceName: this.$refs.resourceName.value,
-                    status: this.$refs.status.value==='-1'?'':this.$refs.status.value
+                    status: this.$refs.status.value
                 }
             };
             Menu.table.refresh(param);
@@ -477,24 +485,11 @@ $(function () {
     table.setIdField("resourceId");
     table.setCodeField("resourceId");
     table.setParentCodeField("parentId");
-    table.setExpandAll(false);
+    table.setExpandAll(true);
     table.init();
     Menu.table = table;
-    resourceObj.init();
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": true,
-        "progressBar": false,
-        "positionClass": "toast-top-full-width",
-        "onclick": null,
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "timeOut": "5000",
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-    };
+    $("#status").select2({
+        width:172,
+        height:34
+    });
 });

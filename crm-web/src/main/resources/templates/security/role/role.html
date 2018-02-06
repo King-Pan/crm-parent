@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:include="/common/model_meta :: modelHeader('角色管理')"></head>
 <body>
-
+<input type="hidden" id="baseUrl"  th:value="${session.URL}" />
 <div class="panel-body" style="padding-bottom:0px;">
     <div class="panel " style="margin-bottom:0px; border: solid 1px #eee;">
         <div class="panel-heading" style="font-weight: bold; background-color: #f5fafe; border-bottom: solid 1px #eee;">

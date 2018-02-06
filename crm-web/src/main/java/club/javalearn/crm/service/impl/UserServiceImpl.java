@@ -1,6 +1,8 @@
 package club.javalearn.crm.service.impl;
 
+import club.javalearn.crm.model.Role;
 import club.javalearn.crm.model.User;
+import club.javalearn.crm.repository.RoleRepository;
 import club.javalearn.crm.repository.UserRepository;
 import club.javalearn.crm.security.core.properties.SecurityProperties;
 import club.javalearn.crm.service.UserService;
@@ -22,9 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * crm-parent
@@ -39,13 +39,16 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private SecurityProperties securityProperties;
 
     @Override
-    public Message<User> getList(final String param, Pageable pageable) {
+    public Message<User> getList(final User user, Pageable pageable) {
         BootstrapMessage<User> message = new BootstrapMessage<>();
         Sort sort = new Sort(Sort.Direction.DESC, "updateDate");
         sort.and(new Sort(Sort.Direction.ASC,"status"));
@@ -58,7 +61,7 @@ public class UserServiceImpl implements UserService {
                 Path<String> userNamePath = root.get("userName");
                 Path<String> statusPath = root.get("status");
                 List<Predicate> wherePredicate = new ArrayList<>();
-                final User user = convertUser(param);
+                //final User user = convertUser(param);
                 if(user!=null){
                     if(StringUtils.isNoneBlank(user.getNickName())){
                         wherePredicate.add(cb.like(nickNamePath,"%"+user.getNickName()+"%"));
@@ -66,7 +69,7 @@ public class UserServiceImpl implements UserService {
                     if(StringUtils.isNoneBlank(user.getUserName())){
                         wherePredicate.add(cb.like(userNamePath,"%"+user.getUserName()+"%"));
                     }
-                    if(StringUtils.isNoneBlank(user.getStatus())){
+                    if(StringUtils.isNoneBlank(user.getStatus()) && !Constant.ALL_STATUS.equals(user.getStatus())){
                         wherePredicate.add(cb.equal(statusPath,user.getStatus()));
                     }
                 }
@@ -83,12 +86,18 @@ public class UserServiceImpl implements UserService {
 
         List<User> userList = new ArrayList<>();
         for(User user1:page.getContent()){
-            userList.add(new User(user1.getUserId(),
+            User newUser = new User(user1.getUserId(),
                     user1.getUserName(),
                     user1.getNickName(),
                     user1.getStatus(),
                     user1.getCreateDate(),
-                    user1.getUpdateDate()));
+                    user1.getUpdateDate());
+            List<Long> roleIds = new ArrayList<>();
+            for (Role role:user1.getRoles()){
+                roleIds.add(role.getRoleId());
+            }
+            newUser.setRoleIds(roleIds);
+            userList.add(newUser);
         }
         message.setRows(userList);
         message.setLimit(page.getSize());
@@ -100,7 +109,32 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackOn = RuntimeException.class)
     @Override
     public void update(User user) {
-        userRepository.updateUser(user.getUserId(),user.getUserName(),user.getNickName(),new Date());
+        List<Role> roles = roleRepository.findByRoleIdIn(user.getRoleIds());
+
+        User newUser = userRepository.findOne(user.getUserId());
+        newUser.setStatus(user.getStatus());
+        newUser.setUpdateDate(new Date());
+        newUser.setUserName(user.getUserName());
+        newUser.setNickName(user.getNickName());
+//        List<Long> roleIds = new ArrayList<>();
+//        Iterator<Role> iterator = newUser.getRoles().iterator();
+//        while (iterator.hasNext()){
+//            Role role = iterator.next();
+//            roleIds.add(role.getRoleId());
+//        }
+//       for (Long roleId:roleIds){
+//           Role role = roleRepository.findOne(roleId);
+//           if(newUser.getRoles().contains(role)){
+//               newUser.getRoles().remove(role);
+//               userRepository.save(newUser);
+//           }
+//       }
+        newUser.getRoles().removeAll(newUser.getRoles());
+        for (Role role: roles){
+            newUser.getRoles().add(role);
+            role.getUsers().add(user);
+        }
+        userRepository.save(newUser);
     }
 
     @Modifying
@@ -111,6 +145,10 @@ public class UserServiceImpl implements UserService {
             if(userRepository.getByUserName(user.getUserName())!=null){
                 throw new RuntimeException("用户名已存在");
             } else{
+                List<Role> roles = roleRepository.findByRoleIdIn(user.getRoleIds());
+                for (Role role: roles){
+                    user.getRoles().add(role);
+                }
                 user.setStatus(Constant.DEFAULT_STATUS);
                 user.setCreateDate(new Date());
                 user.setSalt(SaltGenerator.createSalt());

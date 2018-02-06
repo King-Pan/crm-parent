@@ -96,9 +96,7 @@ public class Resource {
     @JsonSerialize(using = DefaultDateJsonSerializer.class)
     private Date updateDate;
 
-    @ManyToMany
-    @JoinTable(name = "sys_role_resource",joinColumns = {@JoinColumn(name = "resource_id", referencedColumnName = "resourceId")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "roleId")})
+    @ManyToMany(mappedBy = "resources")
     @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 

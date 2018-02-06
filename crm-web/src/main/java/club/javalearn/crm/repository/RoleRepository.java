@@ -27,4 +27,11 @@ public interface RoleRepository extends JpaRepository<Role,Long>,JpaSpecificatio
     @Modifying
     @Query(value = "update Role r set r.status=3 where r.roleId in (:roleIds)")
     void deleteBatch(@Param("roleIds") List<Long> roleIds);
+
+    /**
+     * 通过roleIds查询选择的角色
+     * @param roleIds 角色ID
+     * @return 角色稽核
+     */
+    List<Role> findByRoleIdIn(List<Long> roleIds);
 }

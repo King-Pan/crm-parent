@@ -6,6 +6,31 @@ var userObj = {
             width:172,
             height:34
         });
+        $.ajax({
+            type:'get',
+            url: baseUrl + '/role',
+            success:function (data) {
+                if(data){
+                    var roleData = [];
+                    for(var x in data.rows){
+                        var obj = {
+                            id: data.rows[x].roleId,
+                            text: data.rows[x].roleName
+                        };
+                        roleData.push(obj); //这个应该是个json对象
+                    }
+                    $("#roleIds").select2({
+                        height:34,
+                        width:'100%',
+                        placeholder: '请选择用户角色',
+                        data: roleData
+                    });
+                }
+            },
+            error:function () {
+                
+            }
+        });
         $('#userTable').bootstrapTable({
             url: '/user',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
@@ -99,6 +124,7 @@ var userObj = {
                 return { classes: strclass };
             }//隔行变色
         });
+
     },
     //获取查询参数
     queryParams:function (params) {
@@ -169,6 +195,7 @@ var userObj = {
         obj.userId = $("#userId").val();
         obj.userName = $("#userName").val();
         obj.nickName = $("#nickName").val();
+        obj.roleIds = $("#roleIds").val();
         if(obj.userId){
             obj._method = $("#_method").val();
         }
@@ -247,9 +274,14 @@ var userObj = {
             }
             else if ($obj.attr("type") === "textarea") {
                 obj.find("[name=" + name + "]").html(ival);
+            }else {
+                if(name!=='roleIds'){
+                    obj.find("[name=" + name + "]").val(ival)
+                }
             }
-            else {
-                obj.find("[name=" + name + "]").val(ival);
+            $obj = obj.find("select[name=" + name + "]");
+            if($obj && $obj.length>0){
+                $("#" + name + "").val(ival).trigger('change');
             }
         });
     },
