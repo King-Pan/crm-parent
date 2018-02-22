@@ -24,4 +24,16 @@ public class ArrayTest {
         String[] strAry = new String[]{};
         System.out.println(Arrays.toString(stringList.toArray(strAry)));
     }
+
+    @Test
+    public void testMax(){
+        System.out.println(Long.MAX_VALUE+2);
+        long time = 199902222222222222L;
+        System.out.println(time);
+        double d = 2.0;
+        System.out.println(d);
+    }
+
+
+
 }
