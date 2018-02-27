@@ -8,6 +8,9 @@ package club.javalearn.crm.utils;
  **/
 public class Constant {
 
+
+    public static final String ALL_STATUS = "-1";
+
     /**
      * 数据默认的状态(启用)
      */

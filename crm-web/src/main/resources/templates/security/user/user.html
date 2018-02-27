@@ -1,111 +1,149 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:include="/common/model_meta :: modelHeader('用户管理')"></head>
 <body>
-
-<div class="panel-body" style="padding-bottom:0px;">
-    <div class="panel " style="margin-bottom:0px; border: solid 1px #eee;">
-        <div class="panel-heading" style="font-weight: bold; background-color: #f5fafe; border-bottom: solid 1px #eee;">
-            查询条件
-            <span style="float:right;">
-	            	<a class="qry-btn" onclick="userObj.doSearch()">
+<div id="userVm" v-cloak>
+    <div class="panel-body" style="padding-bottom:0px;">
+        <input type="hidden" id="baseUrl" th:value="${session.URL}"/>
+        <div class="panel " style="margin-bottom:0px; border: solid 1px #eee;">
+            <div class="panel-heading"
+                 style="font-weight: bold; background-color: #f5fafe; border-bottom: solid 1px #eee;">
+                查询条件
+                <span style="float:right;">
+	            	<a class="qry-btn" v-on:click="doQuery">
 						<span class="glyphicon glyphicon-search"></span>查询
 	            	</a>
 				</span>
-        </div>
-        <div class="search-header">
-            <form id="formSearch" class="form-inline" role="form">
-                <div class="form-group">
-                    <label class="form-label form-label-item" for="userName">用户账户:</label>
-                    <input type="text" name="userName" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label class="form-label form-label-item" for="nickName">用户昵称:</label>
-                    <input type="text" name="nickName" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label class="form-label form-label-item" for="status">用户状态:</label>
-                    <select id="status" name="status" class="form-control form-control-select">
-                        <option value="-1">全部</option>
-                        <option value="0">未启用</option>
-                        <option value="1" selected>启用</option>
-                        <option value="2">锁定</option>
-                        <option value="3">删除</option>
-                    </select>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="content">
-        <div class="table-responsive">
-            <div id="toolbar">
-                <a href="javascript:void(0);" class="btn btn-primary" onclick="userObj.openAddDialog();"><i
-                        class="icon-plus icon-large"></i>新增</a>
-                <a href="javascript:void(0);" class="btn btn-warning" onclick="userObj.edit();"><i
-                        class="icon-pencil icon-large"></i>修改</a>
-                <a href="javascript:void(0);" class="btn btn-danger" onclick="userObj.delete();"><i
-                        class="icon-trash icon-large"></i>删除</a>
             </div>
-            <table id="userTable" class="table-striped table-hover" data-mobile-responsive="true">
-            </table>
+            <div class="search-header">
+                <form id="formSearch" class="form-inline" role="form">
+                    <div class="form-group">
+                        <label class="form-label form-label-item" for="userName">用户账户:</label>
+                        <input type="text" ref="userName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label form-label-item" for="nickName">用户昵称:</label>
+                        <input type="text" ref="nickName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label form-label-item" for="q_status">用户状态:</label>
+                        <select ref="status" id="q_status" class="form-control">
+                            <option value="-1">全部</option>
+                            <option value="0">未启用</option>
+                            <option value="1" selected>启用</option>
+                            <option value="2">锁定</option>
+                            <option value="3">删除</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
         </div>
+        <div class="content">
+            <div class="table-responsive">
+                <div id="toolbar">
+                    <a href="javascript:void(0);" class="btn btn-primary" v-on:click="openNewWin"><i
+                            class="icon-plus icon-large"></i>新增</a>
+                    <a href="javascript:void(0);" class="btn btn-warning" v-on:click="openUpdateWin"><i
+                            class="icon-pencil icon-large"></i>修改</a>
+                    <a href="javascript:void(0);" class="btn btn-danger" v-on:click="del"><i
+                            class="icon-trash icon-large"></i>删除</a>
+                </div>
+                <table id="userTable" class="table-striped table-hover" data-mobile-responsive="true">
+                </table>
+            </div>
+        </div>
+
     </div>
 
-</div>
 
+    <!--addUser begin-->
+    <div class="modal fade" id="addUserDialog" tabindex="-1" role="dialog" aria-labelledby="userModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form class="form-horizontal add-form-rule" id="addUserForm">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="userModalLabel">{{title}}</h4>
+                        <div id="hiddenMethod"></div>
+                    </div>
+                    <div style="padding-right:1px;">
+                        <div style="height:355px;">
 
-<!--addUser begin-->
-<div class="modal fade" id="addUserDialog" tabindex="-1" role="dialog" aria-labelledby="userModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form class="form-horizontal add-form-rule" id="addUserForm">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="userModalLabel">新增用户</h4>
-                    <div id="hiddenMethod"></div>
-                </div>
-                <div style="padding-right:1px;">
-                    <div style="height:355px;">
-
-                        <div class="modal-body" style="width: 100%; height:355px;">
-                            <input placeholder="" name="userId" id="userId"
-                                   value="" type="hidden">
-                            <div class="form-group">
+                            <div class="modal-body" style="width: 100%; height:355px;">
+                                <input placeholder="" v-model="user.userId"
+                                       value="" type="hidden">
+                                <div class="form-group">
 			          				<span class="col-sm-3 control-label">
 										用户名
 			          				</span>
-                                <div class="col-sm-6">
-                                    <input placeholder="" name="userName" id="userName" class="form-control"
-                                           type="text">
+                                    <div class="col-sm-6">
+                                        <input placeholder="" v-model="user.userName" class="form-control"
+                                               type="text">
+                                    </div>
+                                    <span class="col-sm-3" id="userNameInfo"></span>
                                 </div>
-                                <span class="col-sm-3" id="userNameInfo"></span>
-                            </div>
-                            <div class="form-group">
+                                <div class="form-group">
 			          				<span class="col-sm-3 control-label">
 										昵称
 			          				</span>
-                                <div class="col-sm-6">
-                                    <input placeholder="" name="nickName" id="nickName"
-                                           value="" class="form-control" type="text">
+                                    <div class="col-sm-6">
+                                        <input placeholder="" v-model="user.nickName"
+                                               value="" class="form-control" type="text">
+                                    </div>
+                                    <span class="col-sm-3" id="nickNameInfo"></span>
                                 </div>
-                                <span class="col-sm-3" id="nickNameInfo"></span>
-                            </div>
-                        </div>
+                                <div class="form-group">
+			          				<span class="col-sm-3 control-label">
+										状态
+			          				</span>
+                                    <div class="col-sm-6">
+                                        <select v-model="user.status" id="n_status" class="form-control">
+                                            <option v-for="option in statusOptions" v-bind:value="option.value">
+                                                {{ option.text }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <span class="col-sm-3" id="statusInfo">
+                                        <span>Selected: {{ user.status }}</span>
+                                    </span>
+                                </div>
 
+                                <div class="form-group">
+			          				<span class="col-sm-3 control-label">
+										角色
+			          				</span>
+                                    <div class="col-sm-6">
+                                        <select v-model="user.roleIds" id="roleIds"  class="form-control" multiple="multiple">
+                                            <option v-for="option in roleOptions" v-bind:value="option.value">
+                                                {{ option.text }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <span class="col-sm-3" id="roleIdsInfo">
+                                                <span>Selected: {{ user.roleIds }}</span>
+                                    </span>
+                                </div>
+
+
+                            </div>
+
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="submit-btn" class="btn btn-info btn-sm submit-btn" onclick="userObj.saveOrUpdate()">提交</button>
-                    <button type="button" class="btn btn-info btn-sm" data-dismiss="modal">关闭</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" id="submit-btn" class="btn btn-info btn-sm submit-btn"
+                                @click="saveOrUpdate">提交
+                        </button>
+                        <button type="button" class="btn btn-info btn-sm" data-dismiss="modal">关闭</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-content -->
+        <!-- /.modal -->
     </div>
-    <!-- /.modal -->
+    <!--addUser end-->
 </div>
-<!--addUser end-->
 <div th:include="/common/model_onloadJS :: onloadJS"></div>
-<script src="../../../static/js/security/user/user.js" th:src="@{/js/security/user/user.js}"></script>
+<script src="../../../static/js/security/user.js" th:src="@{/js/security/user.js}"></script>
 </body>
 </html>

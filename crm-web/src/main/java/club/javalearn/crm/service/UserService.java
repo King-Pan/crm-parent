@@ -15,11 +15,11 @@ import org.springframework.data.domain.Pageable;
 public interface UserService {
     /**
      * 分页查询用户信息
-     * @param param 查询条件
+     * @param user 查询条件
      * @param pageable 分页参数
      * @return DataTableMessage
      */
-     Message<User> getList(String param, Pageable pageable);
+     Message<User> getList(User user, Pageable pageable);
 
     /**
      * 修改用户

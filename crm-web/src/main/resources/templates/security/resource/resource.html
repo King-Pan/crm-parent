@@ -1,6 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:include="/common/model_meta :: modelHeader('角色管理')">
-
 </head>
 <body>
 <div id="resourceVm" v-cloak>
@@ -155,7 +154,7 @@
 										状态
 			          				</span>
                                     <div class="col-sm-6">
-                                        <select v-model="menu.status" class="form-control form-control-select">
+                                        <select v-model="menu.status" id="m_status" class="form-control form-control-select">
                                             <option value="-1">全部</option>
                                             <option value="0">未启用</option>
                                             <option value="1" selected>启用</option>

@@ -61,14 +61,14 @@ public class Role {
     @JsonSerialize(using = DefaultDateJsonSerializer.class)
     private Date updateDate;
 
-    @ManyToMany
-    @JoinTable(name = "sys_user_role",joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "roleId")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "userId")})
+    @ManyToMany(mappedBy = "roles")
     @JsonIgnore
     private Set<User> users = new HashSet<>();
 
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "sys_role_resource",joinColumns ={@JoinColumn(name = "role_id", referencedColumnName = "roleId")},
+            inverseJoinColumns =  {@JoinColumn(name = "resource_id", referencedColumnName = "resourceId")})
     @JsonIgnore
     private Set<Resource> resources = new HashSet<>();
     @Override

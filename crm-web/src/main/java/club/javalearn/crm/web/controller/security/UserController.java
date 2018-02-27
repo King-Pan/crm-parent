@@ -49,9 +49,9 @@ public class UserController {
      */
     @GetMapping
     @ApiOperation(value = "用户查询服务")
-    public Message<User> query(@RequestParam(name = "param",required = false) String  param, @PageableDefault Pageable pageable) {
-        log.debug("查询参数:"+param);
-        return userService.getList(param,pageable);
+    public Message<User> query(User user, @PageableDefault Pageable pageable) {
+        log.debug("查询参数:"+user);
+        return userService.getList(user,pageable);
     }
 
 
@@ -60,6 +60,7 @@ public class UserController {
     public ServerResponse update(@RequestBody User user) {
         ServerResponse response;
         try {
+            System.out.println(user.getRoleIds());
             userService.update(user);
             response = ServerResponse.createBySuccessMessage("用户修改成功");
         }catch (Exception e){

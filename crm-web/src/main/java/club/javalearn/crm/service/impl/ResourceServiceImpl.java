@@ -48,7 +48,7 @@ public class ResourceServiceImpl implements ResourceService {
                 if (StringUtils.isNoneBlank(resourceName)) {
                     wherePredicate.add(cb.like(resourceNamePath, "%" + resourceName + "%"));
                 }
-                if (StringUtils.isNoneBlank(status)) {
+                if (StringUtils.isNoneBlank(status) && !Constant.ALL_STATUS.equals(status)) {
                     wherePredicate.add(cb.equal(statusPath, status));
                 }
                 Predicate[] predicates = new Predicate[]{};
