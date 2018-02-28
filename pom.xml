@@ -19,7 +19,6 @@
     </properties>
     <modules>
         <module>crm-web</module>
-        <module>crm-security</module>
     </modules>
     <dependencyManagement>
         <dependencies>

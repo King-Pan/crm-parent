@@ -46,4 +46,11 @@ public interface UserService {
      * @param userIds 用户ID
      */
     void deleteBatchByStatus(String userIds);
+
+    /**
+     * 通过用户名查找用户
+     * @param userName 用户名
+     * @return 用户
+     */
+    User findUserByName(String userName);
 }

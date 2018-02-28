@@ -1,6 +1,8 @@
 package test.club.javalearn.crm.web;
 
 import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +35,14 @@ public class ArrayTest {
         double d = 2.0;
         System.out.println(d);
     }
+
+    @Test
+    public void testPassword(){
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String password = passwordEncoder.encode("admin123");
+        System.out.println(password);
+    }
+
 
 
 

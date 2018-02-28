@@ -24,7 +24,9 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * crm-parent
@@ -116,19 +118,6 @@ public class UserServiceImpl implements UserService {
         newUser.setUpdateDate(new Date());
         newUser.setUserName(user.getUserName());
         newUser.setNickName(user.getNickName());
-//        List<Long> roleIds = new ArrayList<>();
-//        Iterator<Role> iterator = newUser.getRoles().iterator();
-//        while (iterator.hasNext()){
-//            Role role = iterator.next();
-//            roleIds.add(role.getRoleId());
-//        }
-//       for (Long roleId:roleIds){
-//           Role role = roleRepository.findOne(roleId);
-//           if(newUser.getRoles().contains(role)){
-//               newUser.getRoles().remove(role);
-//               userRepository.save(newUser);
-//           }
-//       }
         newUser.getRoles().removeAll(newUser.getRoles());
         for (Role role: roles){
             newUser.getRoles().add(role);
@@ -152,7 +141,7 @@ public class UserServiceImpl implements UserService {
                 user.setStatus(Constant.DEFAULT_STATUS);
                 user.setCreateDate(new Date());
                 user.setSalt(SaltGenerator.createSalt());
-                user.setPassword(passwordEncoder.encode(user.getSalt()+securityProperties.getBrowser().getDefaultPassword()));
+                user.setPassword(passwordEncoder.encode(securityProperties.getBrowser().getDefaultPassword()));
                 return userRepository.save(user);
             }
         }else{
@@ -179,32 +168,8 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteByStatus(userList);
     }
 
-
-    private User convertUser(String param){
-        User user;
-        if(StringUtils.isNoneBlank(param)){
-            String[] values = param.split("&");
-            user = new User();
-            for (String value:values){
-                String[] keys = value.split("=");
-                if(keys.length==2){
-                    if(keys[0].endsWith("userName") && StringUtils.isNoneBlank(keys[1])){
-                        user.setUserName(keys[1].trim());
-                    }
-                    if(keys[0].endsWith("nickName") && StringUtils.isNoneBlank(keys[1])){
-                        user.setNickName(keys[1].trim());
-                    }
-                    if(keys[0].endsWith("status") && StringUtils.isNoneBlank(keys[1]) && !"-1".equals(keys[1])){
-                        user.setStatus(keys[1].trim());
-                    }
-                }
-            }
-        }else{
-            user = new User();
-            user.setStatus(Constant.DEFAULT_STATUS);
-        }
-
-        return user;
-
+    @Override
+    public User findUserByName(String userName) {
+        return userRepository.findByUserName(userName);
     }
 }

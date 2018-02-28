@@ -51,4 +51,7 @@ public interface UserRepository extends JpaRepository<User,Long>,JpaSpecificatio
     void deleteByStatus(@Param("userIds") List<Long> userIds);
 
 
+    User findByUserName(String userName);
+
+
 }
