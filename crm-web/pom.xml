@@ -85,6 +85,10 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
         <!--java程序执行ssh命令-->
         <dependency>
             <groupId>com.jcraft</groupId>
