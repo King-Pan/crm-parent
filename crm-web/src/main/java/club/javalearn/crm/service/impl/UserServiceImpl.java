@@ -141,8 +141,7 @@ public class UserServiceImpl implements UserService {
                 user.setStatus(Constant.DEFAULT_STATUS);
                 user.setCreateDate(new Date());
                 user.setSalt(SaltGenerator.createSalt());
-                user.setPassword(passwordEncoder.encode(securityProperties.getBrowser().getDefaultPassword()));
-                return userRepository.save(user);
+                user.setPassword(passwordEncoder.encode(user.getSalt()+securityProperties.getBrowser().getDefaultPassword()));                return userRepository.save(user);
             }
         }else{
             throw new RuntimeException("用户名不能为空");
