@@ -40,11 +40,11 @@
         <div class="content">
             <div class="table-responsive">
                 <div id="toolbar">
-                    <a href="javascript:void(0);" class="btn btn-primary" v-on:click="openNewWin"><i
+                    <a href="javascript:void(0);" class="btn btn-primary" v-on:click="openNewWin()"><i
                             class="icon-plus icon-large"></i>新增</a>
-                    <a href="javascript:void(0);" class="btn btn-warning" v-on:click="openUpdateWin"><i
+                    <a href="javascript:void(0);" class="btn btn-warning" v-on:click="openUpdateWin()"><i
                             class="icon-pencil icon-large"></i>修改</a>
-                    <a href="javascript:void(0);" class="btn btn-danger" v-on:click="del"><i
+                    <a href="javascript:void(0);" class="btn btn-danger" v-on:click="deleteRow()"><i
                             class="icon-trash icon-large"></i>删除</a>
                 </div>
                 <table id="userTable" class="table-striped table-hover" data-mobile-responsive="true">
@@ -104,7 +104,7 @@
                                         </select>
                                     </div>
                                     <span class="col-sm-3" id="statusInfo">
-                                        <span>Selected: {{ user.status }}</span>
+
                                     </span>
                                 </div>
 
@@ -120,7 +120,7 @@
                                         </select>
                                     </div>
                                     <span class="col-sm-3" id="roleIdsInfo">
-                                                <span>Selected: {{ user.roleIds }}</span>
+
                                     </span>
                                 </div>
 

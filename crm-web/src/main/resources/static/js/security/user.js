@@ -35,9 +35,6 @@ var vm = new Vue({
                 nickName: this.$refs.nickName.value
             };
         },
-        del: function () {
-
-        },
         saveOrUpdate: function () {
             if(vm.validated()){
                 var url = "/user";
@@ -107,9 +104,18 @@ var vm = new Vue({
         /**
          * 打开修改窗口
          */
-        openUpdateWin:function () {
+        openUpdateWin:function (id) {
             vm.title ='修改用户';
-            var rows = $('#userTable').bootstrapTable('getSelections');
+            var rows;
+            if(id){
+                var row = $('#userTable').bootstrapTable('getRowByUniqueId',id);
+                if(row){
+                    rows = [];
+                    rows.push(row);
+                }
+            }else{
+                rows = $('#userTable').bootstrapTable('getSelections');
+            }
             if(rows && rows.length===1){
                 console.log(rows[0]);
                 vm.user.userId=rows[0].userId;
@@ -117,8 +123,7 @@ var vm = new Vue({
                 vm.user.userName=rows[0].userName;
                 vm.user.nickName=rows[0].nickName;
                 vm.user.roleIds=rows[0].roleIds;
-                $("#userId").val('');
-                $("#hiddenMethod").empty();
+                $("#roleIds").val(vm.user.roleIds).trigger("change");
                 $("#addUserDialog").modal("show");
             }else{
                 toastr.warning("请选择一条需要修改的数据");
@@ -126,9 +131,38 @@ var vm = new Vue({
         },
         operateFormatter:function (value, row, index) {
             return [
-                '<a href="javascript:void(0);" class="btn btn-warning btn-xs" onclick="userObj.editRow('+row.userId+')"><i class="icon-pencil icon-large"></i>修改</a>&nbsp;',
-                '<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="userObj.deleteRow('+row.userId+')"><i class="icon-trash icon-large"></i>删除</a>&nbsp;'
+                '<a href="javascript:void(0);" class="btn btn-warning btn-xs" onclick="vm.openUpdateWin('+row.userId+')"><i class="icon-pencil icon-large"></i>修改</a>&nbsp;',
+                '<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="vm.deleteRow('+row.userId+')"><i class="icon-trash icon-large"></i>删除</a>&nbsp;'
             ].join('');
+        },
+        deleteRow:function(id){
+            if(!id){
+              var rows = $('#userTable').bootstrapTable('getSelections');
+              if(rows && rows.length === 1){
+                  id = rows[0].userId;
+              }
+            }
+            Ewin.confirm({ message: "确认要删除选择的数据吗？" }).on(function (e) {
+                if (!e) {
+                    return;
+                }
+                $.ajax({
+                    url: '/user/' + id,
+                    type: 'delete',
+                    dataType: 'json',
+                    contentType: "application/json;charset=UTF-8",
+                    success: function (data) {
+                        if (data.status === 0) {
+                            //成功后的处理
+                            toastr.success(data.msg);
+                            vm.doSearch();
+                        } else {
+                            //失败后的处理
+                            toastr.warning(data.msg);
+                        }
+                    }
+                });
+            });
         }
     }
 });
@@ -260,7 +294,7 @@ function init() {
             }
         ],
         rowStyle: function (row, index) {
-            var classesArr = ['success', 'info'];
+            var classesArr = ['default', 'info'];
             var strclass = "";
             if (index % 2 === 0) {//偶数行
                 strclass = classesArr[0];

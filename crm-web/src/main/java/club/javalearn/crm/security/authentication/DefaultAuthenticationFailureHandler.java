@@ -1,6 +1,6 @@
 package club.javalearn.crm.security.authentication;
 
-import club.javalearn.crm.security.core.LoginType;
+import club.javalearn.crm.security.core.properties.LoginResponseType;
 import club.javalearn.crm.security.core.properties.SecurityProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -35,15 +35,15 @@ public class DefaultAuthenticationFailureHandler extends SimpleUrlAuthentication
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-        if(log.isInfoEnabled()){
+        if (log.isInfoEnabled()) {
             log.info("{}登录失败");
         }
-        if(LoginType.JSON.equals(securityProperties.getBrowser().getLoginType())){
+        if (LoginResponseType.JSON.equals(securityProperties.getBrowser().getSignInResponseType())) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setContentType("application/json;charset=utf-8");
             response.getWriter().write(objectMapper.writeValueAsString(exception));
-        } else{
-            super.onAuthenticationFailure(request,response,exception);
+        } else {
+            super.onAuthenticationFailure(request, response, exception);
         }
     }
 }

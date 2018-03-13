@@ -6,10 +6,7 @@ import club.javalearn.crm.repository.RoleRepository;
 import club.javalearn.crm.repository.UserRepository;
 import club.javalearn.crm.security.core.properties.SecurityProperties;
 import club.javalearn.crm.service.UserService;
-import club.javalearn.crm.utils.BootstrapMessage;
-import club.javalearn.crm.utils.Constant;
-import club.javalearn.crm.utils.Message;
-import club.javalearn.crm.utils.SaltGenerator;
+import club.javalearn.crm.utils.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,7 +138,9 @@ public class UserServiceImpl implements UserService {
                 user.setStatus(Constant.DEFAULT_STATUS);
                 user.setCreateDate(new Date());
                 user.setSalt(SaltGenerator.createSalt());
-                user.setPassword(passwordEncoder.encode(user.getSalt()+securityProperties.getBrowser().getDefaultPassword()));                return userRepository.save(user);
+                String md5Password = Md5Utils.encryptPassword(user.getUserName(),user.getPassword(),user.getSalt());
+                user.setPassword(md5Password);
+                return userRepository.save(user);
             }
         }else{
             throw new RuntimeException("用户名不能为空");

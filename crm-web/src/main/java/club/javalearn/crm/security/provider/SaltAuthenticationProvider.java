@@ -2,6 +2,7 @@ package club.javalearn.crm.security.provider;
 
 import club.javalearn.crm.model.User;
 import club.javalearn.crm.service.UserService;
+import club.javalearn.crm.utils.Md5Utils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +56,11 @@ public class SaltAuthenticationProvider extends DaoAuthenticationProvider {
 
         logger.info("登录用户名:" + token.getName());
         User dbUser = userService.findUserByName(token.getName());
-        String loginPwd = getMyPasswordEncoder().encode(dbUser.getSalt()+ token.getCredentials().toString());
+        System.out.println(token.getCredentials());
+        System.out.println(token.getPrincipal());
+        System.out.println("user.password --> "+user.getPassword());
+
+        String loginPwd = Md5Utils.encryptPassword(token.getName(),token.getCredentials().toString(),"b23bed5df5c568a66835b1fad2ed69f9824fd26d");;
         if(!loginPwd.equals(dbUser.getPassword())){
             throw new BadCredentialsException("Invalid username/password");
         }
@@ -66,4 +71,5 @@ public class SaltAuthenticationProvider extends DaoAuthenticationProvider {
         return new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
         //return super.authenticate(authentication);
     }
+
 }

@@ -1,6 +1,6 @@
 package club.javalearn.crm.security.authentication;
 
-import club.javalearn.crm.security.core.LoginType;
+import club.javalearn.crm.security.core.properties.LoginResponseType;
 import club.javalearn.crm.security.core.properties.SecurityProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -35,14 +35,14 @@ public class DefaultAuthenticationSuccessHandler extends SavedRequestAwareAuthen
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        if(log.isInfoEnabled()){
-            log.info("{},登录成功",authentication.getPrincipal());
+        if (log.isInfoEnabled()) {
+            log.info("{},登录成功", authentication.getPrincipal());
         }
-        if(LoginType.JSON.equals(securityProperties.getBrowser().getLoginType())){
+        if (LoginResponseType.JSON.equals(securityProperties.getBrowser().getSignInResponseType())) {
             response.setContentType("application/json;charset=utf-8");
             response.getWriter().write(objectMapper.writeValueAsString(authentication));
-        } else{
-            super.onAuthenticationSuccess(request,response,authentication);
+        } else {
+            super.onAuthenticationSuccess(request, response, authentication);
         }
 
     }
