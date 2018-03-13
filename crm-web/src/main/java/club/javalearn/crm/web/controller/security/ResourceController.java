@@ -34,7 +34,7 @@ public class ResourceController {
         //绝对路径
         String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
         System.out.println("请求绝对路径为:"+basePath);
-        ModelAndView view = new ModelAndView("/security/resource/resource");
+        ModelAndView view = new ModelAndView("/security/resource");
         view.addObject("baseUrl",basePath);
         return view;
     }

@@ -27,7 +27,7 @@ public class RoleController {
 
     @GetMapping("/page")
     public ModelAndView page(){
-        return new ModelAndView("security/role/role");
+        return new ModelAndView("security/role");
     }
 
     /**

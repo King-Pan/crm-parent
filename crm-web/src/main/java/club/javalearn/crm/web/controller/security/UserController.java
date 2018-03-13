@@ -2,23 +2,15 @@ package club.javalearn.crm.web.controller.security;
 
 import club.javalearn.crm.common.ServerResponse;
 import club.javalearn.crm.model.User;
-import club.javalearn.crm.repository.UserRepository;
 import club.javalearn.crm.service.UserService;
-import club.javalearn.crm.utils.DataTableMessage;
 import club.javalearn.crm.utils.Message;
-import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.io.File;
 
 
 /**
@@ -37,7 +29,7 @@ public class UserController {
 
     @GetMapping(value = {"/page"})
     public ModelAndView page(){
-        return new ModelAndView("security/user/user");
+        return new ModelAndView("security/user");
     }
 
 
