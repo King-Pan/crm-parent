@@ -1,6 +1,8 @@
 package club.javalearn.crm.service.impl;
 
+import club.javalearn.crm.model.Resource;
 import club.javalearn.crm.model.Role;
+import club.javalearn.crm.repository.ResourceRepository;
 import club.javalearn.crm.repository.RoleRepository;
 import club.javalearn.crm.service.RoleService;
 import club.javalearn.crm.utils.BootstrapMessage;
@@ -11,7 +13,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -35,8 +39,16 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private ResourceRepository resourceRepository;
+
     @Override
     public Message<Role> getList(final String param, Pageable pageable) {
+
+        Sort sort = new Sort(Sort.Direction.DESC, "updateDate");
+        sort.and(new Sort(Sort.Direction.ASC,"status"));
+        sort.and(new Sort(Sort.Direction.ASC,"roleId"));
+        Pageable pageableRequest = new PageRequest(pageable.getPageNumber(),pageable.getPageSize() , sort);
         BootstrapMessage<Role> message = new BootstrapMessage<>();
         Page<Role> page = roleRepository.findAll(new Specification<Role>() {
 
@@ -64,7 +76,7 @@ public class RoleServiceImpl implements RoleService {
             }
 
 
-        }, pageable);
+        }, pageableRequest);
         message.setRows(page.getContent());
         message.setLimit(page.getSize());
         message.setStart(page.getNumber());
@@ -77,11 +89,18 @@ public class RoleServiceImpl implements RoleService {
     @Transactional(rollbackOn = RuntimeException.class)
     @Override
     public void update(Role role) {
-        Role oldRole = roleRepository.findOne(role.getRoleId());
-        role.setCreateDate(oldRole.getCreateDate());
-        role.setStatus(oldRole.getStatus());
-        role.setUpdateDate(new Date());
-        roleRepository.save(role);
+        Role newRole = roleRepository.findOne(role.getRoleId());
+        List<Resource> resources = resourceRepository.findByResourceIdIn(role.getResourceIdList());
+        newRole.getResources().removeAll(newRole.getResources());
+        for (Resource resource:resources){
+            newRole.getResources().add(resource);
+            resource.getRoles().add(newRole);
+        }
+        newRole.setRoleName(role.getRoleName());
+        newRole.setRoleDesc(role.getRoleDesc());
+        newRole.setStatus(role.getStatus());
+        newRole.setUpdateDate(new Date());
+        roleRepository.save(newRole);
     }
 
     @Modifying
@@ -90,6 +109,11 @@ public class RoleServiceImpl implements RoleService {
     public Role create(Role role) {
         role.setCreateDate(new Date());
         role.setStatus(Constant.DEFAULT_STATUS);
+        List<Resource> resources = resourceRepository.findByResourceIdIn(role.getResourceIdList());
+        for (Resource resource:resources){
+            role.getResources().add(resource);
+            resource.getRoles().add(role);
+        }
         return roleRepository.save(role);
     }
 

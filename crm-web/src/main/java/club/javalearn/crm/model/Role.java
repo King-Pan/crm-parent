@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * crm-parent
@@ -71,6 +69,10 @@ public class Role {
             inverseJoinColumns =  {@JoinColumn(name = "resource_id", referencedColumnName = "resourceId")})
     @JsonIgnore
     private Set<Resource> resources = new HashSet<>();
+
+    @Transient
+    private List<Long> resourceIdList;
+
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Role){
@@ -82,6 +84,12 @@ public class Role {
 
     @Override
     public int hashCode() {
-        return this.getRoleId().hashCode();
+        int code;
+        if(this.getRoleId()!=null){
+            code = this.getRoleId().hashCode();
+        }else {
+            code = new Random().nextInt();
+        }
+        return code;
     }
 }

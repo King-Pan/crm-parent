@@ -34,4 +34,7 @@ public interface RoleRepository extends JpaRepository<Role,Long>,JpaSpecificatio
      * @return 角色稽核
      */
     List<Role> findByRoleIdIn(List<Long> roleIds);
+
+    //@Query(value = "select ")
+    //List<Long> getResourceList(Long roleId);
 }

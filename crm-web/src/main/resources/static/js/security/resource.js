@@ -101,7 +101,7 @@ var vm = new Vue({
     methods:{
         getMenu: function(menuId){
             //加载菜单树
-            $.get("select", function(r){
+            $.get(baseUrl+"resource/select", function(r){
                 ztree = $.fn.zTree.init($("#menuTree"), setting, r.data);
                 var node = ztree.getNodeByParam("resourceId", vm.menu.parentId);
                 if(node){

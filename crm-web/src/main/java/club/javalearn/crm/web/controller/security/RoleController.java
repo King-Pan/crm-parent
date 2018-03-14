@@ -48,6 +48,8 @@ public class RoleController {
     public ServerResponse update(@RequestBody Role role) {
         ServerResponse response;
         try {
+            System.out.println("================");
+            System.out.println("role" + role);
             roleService.update(role);
             response = ServerResponse.createBySuccessMessage("角色修改成功");
         }catch (Exception e){

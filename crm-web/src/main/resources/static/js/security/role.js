@@ -7,7 +7,8 @@ var vm = new Vue({
             roleId: null,
             roleName:'',
             roleDesc:'',
-            status: 1
+            status: 1,
+            resourceList: null
         },
         roleOptions:[],
         statusOptions:[
@@ -42,7 +43,14 @@ var vm = new Vue({
             };
         },
         saveOrUpdate:function() {
-            if (vm.validated()) {
+            var nodes = ztree.getCheckedNodes(true);
+            var idList = [];
+            for(var i=0; i<nodes.length; i++) {
+                idList.push(nodes[i].resourceId);
+            }
+            vm.role.resourceIdList = idList;
+            console.log(nodes);
+            if (vm.validate()) {
                 var url = "/role";
                 var type = "post";
                 if (vm.role.roleId) {
@@ -85,10 +93,8 @@ var vm = new Vue({
          */
         openNewWin:function () {
             vm.title ='新增角色';
-            //$("#userModalLabel").html("新增用户");
-            $("#addRoleForm")[0].reset();
-            $("#userId").val('');
-            $("#addUserDialog").modal("show");
+            vm.role = {};
+            $("#addRoleDialog").modal("show");
         },
         /**
          * 打开修改窗口
@@ -164,6 +170,27 @@ var vm = new Vue({
     }
 });
 
+var ztree;
+
+var setting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "resourceId",
+            pIdKey: "parentId",
+            rootPId: -1
+        },
+        key: {
+            name: "resourceName",
+            url: "nourl"
+        }
+    },
+    check:{
+        enable:true,
+        nocheckInherit:true
+    }
+};
+
 $(function () {
     $("#status").select2({
         width:172,
@@ -171,6 +198,11 @@ $(function () {
     });
     init();
     initResourceList();
+    $.get(baseUrl+"resource/select", function(r){
+        ztree = $.fn.zTree.init($("#menuTree"), setting, r.data);
+        //展开所有节点
+        ztree.expandAll(true);
+    })
 });
 
 function initResourceList() {
