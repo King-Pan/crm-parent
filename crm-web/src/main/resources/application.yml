@@ -5,7 +5,7 @@ spring:
     check-template:
       false
   datasource:
-    url: jdbc:mysql://localhost:3306/crm
+    url: jdbc:mysql://47.92.72.146:3306/crm
     username: root
     password: 123456
     initialize: true
@@ -62,5 +62,5 @@ logging:
   pattern:
     console: "%d - %msg%n"
   path: /Users/king-pan/logs/
-  file: /Users/king-pan/logs/shell.log
+  file: /Users/king-pan/logs/crm.log
   level: debug

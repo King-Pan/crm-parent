@@ -282,7 +282,7 @@ function init() {
                 field: 'operate',
                 title: '操作',
                 align: 'center',
-                formatter: operateFormatter //自定义方法，添加操作按钮
+                formatter: vm.operateFormatter //自定义方法，添加操作按钮
             }
         ],
         rowStyle: function (row, index) {
