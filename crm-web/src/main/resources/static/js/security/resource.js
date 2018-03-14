@@ -282,4 +282,5 @@ $(function () {
         width:172,
         height:34
     });
+    vm.initStatus();
 });
