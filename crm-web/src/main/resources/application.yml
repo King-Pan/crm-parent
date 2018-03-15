@@ -43,7 +43,7 @@ spring:
     properties:
       hibernate:
         dialect:
-          org.hibernate.dialect.MySQL5Dialect
+          org.hibernate.dialect.MySQL57InnoDBDialect
   jackson:
     serialization:
       indent_output: true
