@@ -141,6 +141,8 @@ var vm = new Vue({
                 $("#resourceModalLabel").html("修改资源");
                 $("#addResourceForm")[0].reset();
                 $("#resourceId").val('');
+                $("#m_status").val(vm.menu.status).trigger("change");
+
                 $("#hiddenMethod").empty();
                 $("#addResourceDialog").modal("show");
                 vm.initStatus();
