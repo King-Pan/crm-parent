@@ -113,9 +113,16 @@ var vm = new Vue({
             }
             if(rows && rows.length===1){
                 console.log(rows[0]);
-                vm.role.roleId=rows[0].roleId;
-                vm.role.roleName=rows[0].roleName;
-                vm.role.roleDesc=rows[0].roleDesc;
+                vm.role.roleId= rows[0].roleId;
+                vm.role.roleName= rows[0].roleName;
+                vm.role.roleDesc= rows[0].roleDesc;
+                vm.role.status= rows[0].status;
+                vm.role.resourceIdList= rows[0].resourceIdList;
+                var resourceIdList = vm.role.resourceIdList;
+                for(var i=0; i<resourceIdList.length; i++) {
+                    var node = ztree.getNodeByParam("resourceId", resourceIdList[i]);
+                    ztree.checkNode(node, true, false);
+                }
                 $("#addRoleDialog").modal("show");
             }else{
                 toastr.warning("请选择一条需要修改的数据");

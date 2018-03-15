@@ -77,6 +77,14 @@ public class RoleServiceImpl implements RoleService {
 
 
         }, pageableRequest);
+
+        for (Role role:page.getContent()){
+            List<Long> resourceIdList = new ArrayList<>();
+            for (Resource resource:role.getResources()){
+                resourceIdList.add(resource.getResourceId());
+            }
+            role.setResourceIdList(resourceIdList);
+        }
         message.setRows(page.getContent());
         message.setLimit(page.getSize());
         message.setStart(page.getNumber());
@@ -100,6 +108,7 @@ public class RoleServiceImpl implements RoleService {
         newRole.setRoleDesc(role.getRoleDesc());
         newRole.setStatus(role.getStatus());
         newRole.setUpdateDate(new Date());
+
         roleRepository.save(newRole);
     }
 
