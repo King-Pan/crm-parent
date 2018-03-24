@@ -1,5 +1,6 @@
 package club.javalearn.crm.security.browser;
 
+import club.javalearn.crm.security.authorize.AuthorizeConfigManager;
 import club.javalearn.crm.security.provider.SaltAuthenticationProvider;
 import club.javalearn.crm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthorizeConfigManager authorizeConfigManager;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //http.httpBasic()
@@ -57,6 +61,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //任何请求都需要身份认证
                 .anyRequest().authenticated().and().csrf().disable();
+        authorizeConfigManager.config(http.authorizeRequests());
     }
 
     @Override

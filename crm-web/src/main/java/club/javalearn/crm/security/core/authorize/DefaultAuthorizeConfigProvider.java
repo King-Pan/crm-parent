@@ -1,5 +1,6 @@
-package club.javalearn.crm.security.authorize;
+package club.javalearn.crm.security.core.authorize;
 
+import club.javalearn.crm.security.authorize.AuthorizeConfigProvider;
 import club.javalearn.crm.security.core.properties.SecurityConstants;
 import club.javalearn.crm.security.core.properties.SecurityProperties;
 import org.apache.commons.lang3.StringUtils;
@@ -9,12 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.stereotype.Component;
 
-/**
- * 核心模块的授权配置提供器，安全模块涉及的url的授权配置在这里。
- *
- * @author king-pan
- * @date 2018-03-05
- **/
+
 @Component
 @Order(Integer.MIN_VALUE)
 public class DefaultAuthorizeConfigProvider implements AuthorizeConfigProvider {
@@ -35,9 +31,6 @@ public class DefaultAuthorizeConfigProvider implements AuthorizeConfigProvider {
         if (StringUtils.isNotBlank(securityProperties.getBrowser().getSignOutUrl())) {
             config.antMatchers(securityProperties.getBrowser().getSignOutUrl()).permitAll();
         }
-        config.antMatchers("/webjars/**","/css/**","/fonts/**","/libs/**").permitAll();
-
         return false;
     }
-
 }

@@ -11,5 +11,5 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2018-02-28
  **/
 public interface RbacService {
-  boolean  hasPermission(HttpServletRequest request, Authentication authentication);
+  boolean  hasPermision(HttpServletRequest request, Authentication authentication);
 }

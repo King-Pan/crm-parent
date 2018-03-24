@@ -1,24 +1,24 @@
-package club.javalearn.crm.security.crm;
+package club.javalearn.crm.security.browser;
 
 import club.javalearn.crm.security.authorize.AuthorizeConfigProvider;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.stereotype.Component;
 
-/**
- * crm-parent
- *
- * @author king-pan
- * @date 2018-03-05
- **/
 @Component
-@Order(value = Integer.MIN_VALUE)
-public class DemoAuthorizeConfigProvider implements AuthorizeConfigProvider {
+@Order(Integer.MIN_VALUE)
+public class BrowserAuthorizeConfigProvider  implements AuthorizeConfigProvider {
+
     @Override
     public boolean config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {
-        //demo项目授权配置
-        config.anyRequest().access("@rbacService.hasPermission(request,authentication)");
+        config.antMatchers(HttpMethod.GET,
+                "/**/*.js",
+                "/**/*.css",
+                "/**/*.jpg",
+                "/**/*.png",
+                "/**/*.gif").permitAll();
         return false;
     }
 }

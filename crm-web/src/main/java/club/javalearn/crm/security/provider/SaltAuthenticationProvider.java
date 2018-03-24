@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -51,7 +52,7 @@ public class SaltAuthenticationProvider extends DaoAuthenticationProvider {
         } else if (!user.isAccountNonLocked()) {
             throw new LockedException("账号已被锁定");
         } else if (!user.isCredentialsNonExpired()) {
-            throw new LockedException("凭证已过期");
+            throw new NonceExpiredException("凭证已过期");
         }
 
         logger.info("登录用户名:" + token.getName());

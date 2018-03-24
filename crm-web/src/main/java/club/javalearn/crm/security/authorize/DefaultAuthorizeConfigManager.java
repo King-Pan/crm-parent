@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 默认的授权配置管理器
@@ -23,8 +24,8 @@ public class DefaultAuthorizeConfigManager implements AuthorizeConfigManager {
     public void config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {
         boolean existAnyRequestConfig = false;
         String existAnyRequestConfigName = null;
-
         for (AuthorizeConfigProvider authorizeConfigProvider : authorizeConfigProviders) {
+
             boolean currentIsAnyRequestConfig = authorizeConfigProvider.config(config);
             if (existAnyRequestConfig && currentIsAnyRequestConfig) {
                 throw new RuntimeException("重复的anyRequest配置:" + existAnyRequestConfigName + ","
@@ -33,10 +34,11 @@ public class DefaultAuthorizeConfigManager implements AuthorizeConfigManager {
                 existAnyRequestConfig = true;
                 existAnyRequestConfigName = authorizeConfigProvider.getClass().getSimpleName();
             }
+            if(!existAnyRequestConfig){
+                config.anyRequest().authenticated();
+            }
         }
 
-        if(!existAnyRequestConfig){
-            config.anyRequest().authenticated();
-        }
+        //config.anyRequest().authenticated();
     }
 }

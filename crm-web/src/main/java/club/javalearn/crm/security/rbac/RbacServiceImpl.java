@@ -2,7 +2,6 @@ package club.javalearn.crm.security.rbac;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
@@ -22,22 +21,32 @@ public class RbacServiceImpl implements RbacService {
 
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
-    @Override
-    public boolean hasPermission(HttpServletRequest request, Authentication authentication) {
-        boolean hasPermission = false;
-        Object principal = authentication.getPrincipal();
-        if(principal instanceof UserDetails){
-            String username = ((UserDetails)principal).getUsername();
-            // 读取用户所拥有权限的所有URL
-            Set<String> urls = new HashSet<>();
+    {
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++=");
+    }
 
-            for (String url:urls){
-                if (antPathMatcher.match(url,request.getRequestURI())){
-                    hasPermission = true;
-                    break;
+    @Override
+    public boolean hasPermision(HttpServletRequest request, Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+
+        boolean hasPermission = false;
+
+        if (principal instanceof Admin) {
+            //如果用户名是admin，就永远返回true
+            if (org.apache.commons.lang3.StringUtils.equals(((Admin) principal).getUsername(), "admin")) {
+                hasPermission = true;
+            } else {
+                // 读取用户所拥有权限的所有URL
+                Set<String> urls = ((Admin) principal).getUrls();
+                for (String url : urls) {
+                    if (antPathMatcher.match(url, request.getRequestURI())) {
+                        hasPermission = true;
+                        break;
+                    }
                 }
             }
         }
+
         return hasPermission;
     }
 }

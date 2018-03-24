@@ -2,7 +2,6 @@ package club.javalearn.crm.model;
 
 import club.javalearn.crm.config.serializer.DefaultDateJsonSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 
