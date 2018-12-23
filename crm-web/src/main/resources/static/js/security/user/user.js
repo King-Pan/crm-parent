@@ -352,7 +352,7 @@ $(function () {
 });
 function operateFormatter(value, row, index) {//赋予的参数
     return [
-        '<a href="javascript:void(0);" class="btn btn-warning btn-xs" onclick="userObj.editRow('+row.userId+')"><i class="icon-pencil icon-large"></i>修改</a>&nbsp;',
-        '<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="userObj.deleteRow('+row.userId+')"><i class="icon-trash icon-large"></i>删除</a>&nbsp;'
+        '<a href="javascript:void(0);" class="btn btn-warning btn-xs" onclick="this.editRow('+row.userId+')"><i class="icon-pencil icon-large"></i>修改</a>&nbsp;',
+        '<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="this.deleteRow('+row.userId+')"><i class="icon-trash icon-large"></i>删除</a>&nbsp;'
     ].join('');
 }
